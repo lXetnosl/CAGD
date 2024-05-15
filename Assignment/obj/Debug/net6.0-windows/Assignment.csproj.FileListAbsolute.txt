@@ -1,0 +1,16 @@
+B:\Cedric\Repositories\CAGD\Assignment\bin\Debug\net6.0-windows\Assignment.exe
+B:\Cedric\Repositories\CAGD\Assignment\bin\Debug\net6.0-windows\Assignment.deps.json
+B:\Cedric\Repositories\CAGD\Assignment\bin\Debug\net6.0-windows\Assignment.runtimeconfig.json
+B:\Cedric\Repositories\CAGD\Assignment\bin\Debug\net6.0-windows\Assignment.dll
+B:\Cedric\Repositories\CAGD\Assignment\bin\Debug\net6.0-windows\Assignment.pdb
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.Form1.resources
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.csproj.GenerateResource.cache
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.GeneratedMSBuildEditorConfig.editorconfig
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.AssemblyInfoInputs.cache
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.AssemblyInfo.cs
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.csproj.CoreCompileInputs.cache
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.dll
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\refint\Assignment.dll
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.pdb
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\Assignment.genruntimeconfig.cache
+B:\Cedric\Repositories\CAGD\Assignment\obj\Debug\net6.0-windows\ref\Assignment.dll
