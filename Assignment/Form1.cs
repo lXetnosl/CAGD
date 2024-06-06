@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace Assignment
 {
     public partial class Form1 : Form
@@ -26,7 +28,8 @@ namespace Assignment
             */
 
             ObjectReader objReader = new();
-            List<Coordinate2D> coordList = objReader.ReadFile("BezierCurve_1.obj");
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "BezierCurve_1.obj");
+            List<Coordinate2D> coordList = objReader.ReadFile(filePath);
 
             foreach (Coordinate2D coord in coordList)
             {
