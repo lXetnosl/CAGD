@@ -1,68 +1,86 @@
+using System.Drawing;
 using System.Reflection;
+using System.Text;
 
 namespace Assignment
 {
     public partial class Form1 : Form
     {
+        private RenderLayer renderLayer;
+
         public Form1()
         {
             InitializeComponent();
+            renderLayer = new RenderLayer(pictureBox1);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Coordinate2D vec1 = new(7, 4, 0);
-            Coordinate2D point1 = new(2, 3, 1);
-            Coordinate2D vec2 = new(3, 8, 0);
-            Coordinate2D point2 = new(5, 2, 1);
-            float scalar = 5.3f;
-
-            /*
-            textBox1.AppendText((vec1 + vec2).ToString() + Environment.NewLine);
-            textBox1.AppendText((vec1 + point1).ToString() + Environment.NewLine);
-            textBox1.AppendText((vec1 - vec2).ToString() + Environment.NewLine);
-            textBox1.AppendText((point1 - point2).ToString() + Environment.NewLine);
-            //textBox1.AppendText((vec1 - point1).ToString() + Environment.NewLine);
-            textBox1.AppendText((scalar * vec2).ToString() + Environment.NewLine);
-            textBox1.AppendText((vec1 * vec2).ToString() + Environment.NewLine);
-            */
-
-            ObjectReader objReader = new();
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "BezierCurve_1.obj");
-            List<Coordinate2D> coordList = objReader.ReadFile(filePath);
-
-            foreach (Coordinate2D coord in coordList)
+            string filePath = "";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                textBox1.AppendText(coord.ToString() + Environment.NewLine);
+                filePath = openFileDialog1.FileName;
+            }
+            else
+            {
+                return;
             }
 
-            DrawObject(coordList, pictureBox1.CreateGraphics(), 10.0f, new Coordinate2D(10, 10, 0));
+            renderLayer.AddFromFile(filePath);
+            renderLayer.Render();
         }
 
-        private void DrawObject(List<Coordinate2D> coords, Graphics g, float zoom, Coordinate2D displacementVector)
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
-            Pen redPen = new Pen(Color.Red)
+            MouseEventArgs mouseArgs = (MouseEventArgs)e;
+
+            if (selectButton.Checked)
             {
-                Width = 2
-            };
-            Pen blackPen = new Pen(Color.Black)
-            {
-                Width = 2
-            };
-            List<Coordinate2D> displacedCoords = new();
-            foreach (Coordinate2D coord in coords)
-            {
-                displacedCoords.Add(coord + displacementVector);
+                renderLayer.GetVertexAt(new Coordinate2D(mouseArgs.X, mouseArgs.Y, 1), true);
             }
-            for (int i = 0; i < coords.Count - 1; i++)
+            else if (addButton.Checked)
             {
-                Point point1 = new Point(Convert.ToInt32(displacedCoords[i].x * zoom), Convert.ToInt32(displacedCoords[i].y * zoom));
-                Point point2 = new Point(Convert.ToInt32(displacedCoords[i + 1].x * zoom), Convert.ToInt32(displacedCoords[i + 1].y * zoom));
-                int radius = Convert.ToInt32(1 * zoom);
-                g.DrawEllipse(redPen, point1.X - radius, point1.Y - radius, radius * 2, radius * 2);
-                g.DrawEllipse(redPen, point2.X - radius, point2.Y - radius, radius * 2, radius * 2);
-                g.DrawLine(blackPen, point1, point2);
+                Coordinate2D transformedMouseCoords = new Coordinate2D(mouseArgs.X, mouseArgs.Y, 1);
+                renderLayer.AddVertex(transformedMouseCoords);
             }
+            else if (deleteButton.Checked)
+            {
+                renderLayer.DeleteVertexAt(new Coordinate2D(mouseArgs.X, mouseArgs.Y, 1));
+            }
+
+            renderLayer.Render();
+        }
+
+        private void deleteButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (deleteButton.Checked)
+            {
+                renderLayer.DeleteSelected();
+                renderLayer.Render();
+            }
+
+        }
+
+        private void moveButton_Click(object sender, EventArgs e)
+        {
+            float moveXFloat = Convert.ToSingle(moveX.Value);
+            float moveYFloat = Convert.ToSingle(moveY.Value);
+
+            Coordinate2D moveVector = new(moveXFloat, Convert.ToSingle(moveYFloat), 0);
+            renderLayer.MoveSelected(moveVector);
+            renderLayer.Render();
+        }
+
+        private void zoomInput_ValueChanged(object sender, EventArgs e)
+        {
+            renderLayer.Zoom = Convert.ToInt32(zoomInput.Value);
+            renderLayer.Render();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            renderLayer.CenterObject();
+            renderLayer.Render();
         }
     }
 }
