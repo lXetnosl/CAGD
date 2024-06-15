@@ -7,11 +7,39 @@ using System.Threading.Tasks;
 
 namespace Assignment
 {
-    public struct Coordinate2D
+    public class Coordinate2D
     {
-        public float x, y, epsilon;
+        private float x, y, epsilon;
 
-        public Coordinate2D(float x, float y, int epsilon)
+        public float X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+
+        public float Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+
+        public string Type
+        {
+            get 
+            {
+                switch (epsilon) 
+                {
+                    case 0:
+                        return "Vector";
+                    case 1:
+                        return "Point";
+                    default:
+                        return "Invalid";
+                }
+            }
+        }
+
+        public Coordinate2D(float x = 0, float y = 0, int epsilon = 0)
         {
             this.x = x;
             this.y = y;
@@ -63,6 +91,16 @@ namespace Assignment
             return result;
         }
 
+        public static Coordinate2D operator /(Coordinate2D coord, float scalar)
+        {
+            if(scalar == 0)
+            {
+                throw new DivideByZeroException();
+            }
+
+            return coord * (1 / scalar);
+        }
+
         public static float operator *(Coordinate2D left, Coordinate2D right)
         {
             if (left.epsilon != 0 || right.epsilon != 0)
@@ -75,21 +113,7 @@ namespace Assignment
 
         public override string ToString()
         {
-            string type;
-            switch (epsilon)
-            {
-                case 0:
-                    type = "Vector";
-                    break;
-                case 1:
-                    type = "Point";
-                    break;
-                default:
-                    type = "Invalid";
-                    break;
-            }
-
-            string output = type + " X: " + x + " Y: " + y;
+            string output = Type + " X: " + x + " Y: " + y;
             return output;
         }
     }

@@ -15,13 +15,13 @@ namespace Assignment
 
         public List<Coordinate2D> ReadFile(string path)
         {
-            StreamReader reader = null;
+            StreamReader? reader = null;
             try
             {
                 List<Coordinate2D> coordinates = new();
                 using (reader = new(path))
                 {
-                    string currentLine;
+                    string? currentLine;
                     while((currentLine = reader.ReadLine()) != null)
                     {
                         if (currentLine == string.Empty || currentLine[0] != 'v')
@@ -43,7 +43,7 @@ namespace Assignment
             }
             catch (Exception)
             {
-                reader.Close();
+                reader?.Close();
                 throw;
             }
         }
