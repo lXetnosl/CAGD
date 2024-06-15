@@ -44,6 +44,11 @@ namespace Assignment
             get { return _globalDisplacement * _globalZoom; }
         }
 
+        internal int SelectedCount
+        {
+            get { return _selectedVertices.Count; }
+        }
+
         internal RenderLayer(PictureBox renderTarget)
         {
             _renderTarget = renderTarget;
@@ -61,14 +66,21 @@ namespace Assignment
             AddFromFile(path);
         }
 
-        internal void AddVertex(Coordinate2D coord)
+        internal void AddVertex(Coordinate2D coord, bool isWorldSpace = true)
         {
             if(coord == null || !coord.Type.Equals("Point")) 
             {
                 throw new ArgumentException("Vertex is not a valid point.");
             }
 
-            _vertices.Add(new Coordinate2D(coord.X / _globalZoom - _globalDisplacement.X, coord.Y / _globalZoom - _globalDisplacement.Y, 1));
+            if (!isWorldSpace)
+            {
+                _vertices.Add(coord);
+            }
+            else
+            {
+                _vertices.Add(new Coordinate2D(coord.X / _globalZoom - _globalDisplacement.X, coord.Y / _globalZoom - _globalDisplacement.Y, 1));
+            }
 
             foreach (Coordinate2D vertex in _selectedVertices)
             {
@@ -141,6 +153,26 @@ namespace Assignment
             }
         }
 
+        internal bool SplitSelected(float splitPct = 0.5f)
+        {
+            if(_selectedVertices.Count != 2)
+            {
+                throw new NotImplementedException("Operation not implemented for selections below or above 2 vertices.");
+            }
+
+            if (!RemoveEdge(_selectedVertices[0], _selectedVertices[1]))
+            {
+                return false;
+            }
+
+            Coordinate2D newVertex = new(0,0,1);
+            newVertex.X = _selectedVertices[0].X * (1 - splitPct) + _selectedVertices[1].X * splitPct;
+            newVertex.Y = _selectedVertices[0].Y * (1 - splitPct) + (_selectedVertices[1].Y * splitPct);
+            AddVertex(newVertex, false);
+
+            return true;
+        }
+
         internal Coordinate2D? GetVertexAt(Coordinate2D coord, bool select = false) 
         {
             Coordinate2D transformedCoord = new Coordinate2D(coord.X / _globalZoom - _globalDisplacement.X, coord.Y / _globalZoom - _globalDisplacement.Y, 1);
@@ -174,25 +206,63 @@ namespace Assignment
 
         internal void CenterObject()
         {
-            float centerX = 0;
-            float centerY = 0;
+            Coordinate2D upperLeftBound = new();
+            Coordinate2D lowerRightBound = new();
             foreach (Coordinate2D vertex in _vertices)
             {
-                centerX += vertex.X;
-                centerY += vertex.Y;
+                if( vertex.X < upperLeftBound.X )
+                {
+                    upperLeftBound.X = vertex.X;
+                }
+                else if( vertex.X > lowerRightBound.X )
+                {
+                    lowerRightBound.X = vertex.X;
+                }
+                if(vertex.Y < upperLeftBound.Y )
+                {  
+                    upperLeftBound.Y = vertex.Y; 
+                }
+                else if(vertex.Y > lowerRightBound.Y )
+                {
+                    lowerRightBound.Y = vertex.Y;
+                }
             }
-            centerX /= _vertices.Count;
-            centerY /= _vertices.Count;
+            Coordinate2D localCenter = (upperLeftBound + lowerRightBound) / 2.0f;
             Coordinate2D curDisplacement = (_globalDisplacement - _centerDisplacement);
-            Coordinate2D objectCenter = new(centerX + curDisplacement.X, centerY + curDisplacement.Y, 1);
+            Coordinate2D globalCenter = new(localCenter.X + curDisplacement.X, localCenter.Y + curDisplacement.Y, 1);
 
-            Coordinate2D displacement = new Coordinate2D(0,0,1) - objectCenter;
+            Coordinate2D displacement = new Coordinate2D(0,0,1) - globalCenter;
             _globalDisplacement += displacement;
+        }
+
+        internal void AddEdge(Edge2D edge)
+        {
+            _edges.Add(edge);
         }
 
         internal void AddEdge(Coordinate2D start, Coordinate2D end) 
         {
-            _edges.Add(new Edge2D(start, end));
+            AddEdge(new Edge2D(start, end));
+        }
+
+        internal bool RemoveEdge(Edge2D edge)
+        {
+            foreach(Edge2D curEdge in _edges)
+            {
+                if( curEdge.Start.Equals(edge.Start) && curEdge.End.Equals(edge.End) ||
+                    curEdge.Start.Equals(edge.End) && curEdge.End.Equals(edge.Start))
+                {
+                    _edges.Remove(curEdge);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal bool RemoveEdge(Coordinate2D start, Coordinate2D end)
+        {
+            return RemoveEdge(new Edge2D(start, end));
         }
 
         internal void AddFromFile(string path)
@@ -231,16 +301,16 @@ namespace Assignment
             };
             yAxisPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
 
-            Graphics g = _renderTarget.CreateGraphics();
-            g.Clear(Color.White);
+            Graphics graphics = _renderTarget.CreateGraphics();
+            graphics.Clear(Color.White);
 
             Coordinate2D boxCenterVector = new Coordinate2D(_renderTarget.Width / 2.0f, _renderTarget.Height / 2.0f, 0);
             Coordinate2D xAxisStart = boxCenterVector;
             Coordinate2D yAxisStart = boxCenterVector;
             Coordinate2D xAxisEnd = xAxisStart + new Coordinate2D(50, 0, 0);
             Coordinate2D yAxisEnd = yAxisStart + new Coordinate2D(0, 50, 0);
-            g.DrawLine(xAxisPen, xAxisStart.X, xAxisStart.Y, xAxisEnd.X, xAxisEnd.Y);
-            g.DrawLine(yAxisPen, yAxisStart.X, yAxisStart.Y, yAxisEnd.X, yAxisEnd.Y);
+            graphics.DrawLine(xAxisPen, xAxisStart.X, xAxisStart.Y, xAxisEnd.X, xAxisEnd.Y);
+            graphics.DrawLine(yAxisPen, yAxisStart.X, yAxisStart.Y, yAxisEnd.X, yAxisEnd.Y);
 
             if (_globalDisplacement == null)
             {
@@ -252,14 +322,14 @@ namespace Assignment
                 Pen vertexPen = _selectedVertices.Contains(vertex) ? selectedPen : unselectedPen;
                 Coordinate2D curPoint = (vertex + _globalDisplacement) * _globalZoom;
                 float transformedRadius = _vertexRadius * _globalZoom;
-                g.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                graphics.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
             }
 
             foreach(Edge2D edge in _edges)
             {
                 Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
                 Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
-                g.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+                graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
             }
         }
     }

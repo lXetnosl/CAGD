@@ -36,6 +36,8 @@
             selectButton = new RadioButton();
             panel1 = new Panel();
             groupBox1 = new GroupBox();
+            splitInput = new NumericUpDown();
+            splitButton = new Button();
             moveButton = new Button();
             panel3 = new Panel();
             moveY = new NumericUpDown();
@@ -45,12 +47,13 @@
             label1 = new Label();
             button2 = new Button();
             panel5 = new Panel();
-            label4 = new Label();
             zoomInput = new NumericUpDown();
+            label4 = new Label();
             groupBox2 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitInput).BeginInit();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)moveY).BeginInit();
             panel2.SuspendLayout();
@@ -120,6 +123,7 @@
             selectButton.Text = "Select";
             selectButton.TextAlign = ContentAlignment.MiddleCenter;
             selectButton.UseVisualStyleBackColor = true;
+            selectButton.CheckedChanged += selectButton_CheckedChanged;
             // 
             // panel1
             // 
@@ -128,20 +132,43 @@
             panel1.Controls.Add(addButton);
             panel1.Location = new Point(30, 19);
             panel1.Name = "panel1";
-            panel1.Size = new Size(167, 25);
+            panel1.Size = new Size(173, 25);
             panel1.TabIndex = 7;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(splitInput);
+            groupBox1.Controls.Add(splitButton);
             groupBox1.Controls.Add(moveButton);
             groupBox1.Controls.Add(panel3);
             groupBox1.Controls.Add(panel2);
             groupBox1.Location = new Point(586, 42);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(200, 151);
+            groupBox1.Size = new Size(200, 197);
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
             groupBox1.Text = "Edit";
+            // 
+            // splitInput
+            // 
+            splitInput.DecimalPlaces = 3;
+            splitInput.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
+            splitInput.Location = new Point(99, 151);
+            splitInput.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            splitInput.Name = "splitInput";
+            splitInput.Size = new Size(71, 23);
+            splitInput.TabIndex = 11;
+            splitInput.Value = new decimal(new int[] { 5, 0, 0, 65536 });
+            // 
+            // splitButton
+            // 
+            splitButton.Location = new Point(31, 151);
+            splitButton.Name = "splitButton";
+            splitButton.Size = new Size(62, 23);
+            splitButton.TabIndex = 10;
+            splitButton.Text = "Split";
+            splitButton.UseVisualStyleBackColor = true;
+            splitButton.Click += splitButton_Click;
             // 
             // moveButton
             // 
@@ -228,15 +255,6 @@
             panel5.Size = new Size(143, 29);
             panel5.TabIndex = 4;
             // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(4, 6);
-            label4.Name = "label4";
-            label4.Size = new Size(42, 15);
-            label4.TabIndex = 2;
-            label4.Text = "Zoom:";
-            // 
             // zoomInput
             // 
             zoomInput.Location = new Point(47, 3);
@@ -247,11 +265,20 @@
             zoomInput.Value = new decimal(new int[] { 20, 0, 0, 0 });
             zoomInput.ValueChanged += zoomInput_ValueChanged;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(4, 6);
+            label4.Name = "label4";
+            label4.Size = new Size(42, 15);
+            label4.TabIndex = 2;
+            label4.Text = "Zoom:";
+            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(button2);
             groupBox2.Controls.Add(panel5);
-            groupBox2.Location = new Point(586, 207);
+            groupBox2.Location = new Point(586, 257);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 117);
             groupBox2.TabIndex = 9;
@@ -270,9 +297,11 @@
             Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
+            Paint += Form1_Paint;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitInput).EndInit();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)moveY).EndInit();
@@ -307,5 +336,7 @@
         private NumericUpDown zoomInput;
         private Label label4;
         private GroupBox groupBox2;
+        private Button splitButton;
+        private NumericUpDown splitInput;
     }
 }

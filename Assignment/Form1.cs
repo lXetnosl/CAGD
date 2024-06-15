@@ -1,6 +1,8 @@
 using System.Drawing;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Assignment
 {
@@ -12,6 +14,11 @@ namespace Assignment
         {
             InitializeComponent();
             renderLayer = new RenderLayer(pictureBox1);
+        }
+
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            renderLayer.Render();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,6 +62,11 @@ namespace Assignment
         {
             if (deleteButton.Checked)
             {
+                if (renderLayer.SelectedCount > 0 && MessageBox.Show($"Delete {renderLayer.SelectedCount} Vertices?", "Delete Confirmation", MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    return;
+                }
+
                 renderLayer.DeleteSelected();
                 renderLayer.Render();
             }
@@ -81,6 +93,36 @@ namespace Assignment
         {
             renderLayer.CenterObject();
             renderLayer.Render();
+        }
+
+        private void selectButton_CheckedChanged(object sender, EventArgs e)
+        {
+            splitButton.Enabled = selectButton.Checked;
+            splitInput.Enabled = selectButton.Checked;
+        }
+
+        private void splitButton_Click(object sender, EventArgs e)
+        {
+            string invalidSelectionText = "Please select 2 connected vertices to indicate which edge should be split.\n" +
+                    "Note: Selection order matters for split location.\n";
+            if (renderLayer.SelectedCount != 2)
+            {
+                MessageBox.Show(invalidSelectionText + $"\nCurrently Selected: {renderLayer.SelectedCount}",
+                    "Invalid Selection",
+                    MessageBoxButtons.OK);
+                return;
+            }
+            else
+            {
+                bool success = renderLayer.SplitSelected(Convert.ToSingle(splitInput.Value));
+                if (!success)
+                {
+                    MessageBox.Show(invalidSelectionText + "\nCurrently selected vertices do not build an edge.",
+                        "Invalid Selection",
+                        MessageBoxButtons.OK);
+                }
+                renderLayer.Render();
+            }
         }
     }
 }
