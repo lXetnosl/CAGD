@@ -206,8 +206,8 @@ namespace Assignment
 
         internal void CenterObject()
         {
-            Coordinate2D upperLeftBound = new();
-            Coordinate2D lowerRightBound = new();
+            Coordinate2D upperLeftBound = new(float.PositiveInfinity, float.PositiveInfinity, 0);
+            Coordinate2D lowerRightBound = new(float.NegativeInfinity, float.NegativeInfinity, 0);
             foreach (Coordinate2D vertex in _vertices)
             {
                 if( vertex.X < upperLeftBound.X )
@@ -229,9 +229,9 @@ namespace Assignment
             }
             Coordinate2D localCenter = (upperLeftBound + lowerRightBound) / 2.0f;
             Coordinate2D curDisplacement = (_globalDisplacement - _centerDisplacement);
-            Coordinate2D globalCenter = new(localCenter.X + curDisplacement.X, localCenter.Y + curDisplacement.Y, 1);
+            Coordinate2D globalCenter = new(localCenter.X + curDisplacement.X, localCenter.Y + curDisplacement.Y, 0);
 
-            Coordinate2D displacement = new Coordinate2D(0,0,1) - globalCenter;
+            Coordinate2D displacement = new Coordinate2D() - globalCenter;
             _globalDisplacement += displacement;
         }
 
@@ -269,6 +269,7 @@ namespace Assignment
         {
             ObjectReader reader = new();
             _vertices = reader.ReadFile(path);
+            _selectedVertices.Clear();
             _edges.Clear();
             for(int i = 0; i < _vertices.Count - 1; i++) 
             {
