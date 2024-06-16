@@ -206,6 +206,11 @@ namespace Assignment
 
         internal void CenterObject()
         {
+            if(_vertices.Count <= 0)
+            {
+                return;
+            }
+
             Coordinate2D upperLeftBound = new(float.PositiveInfinity, float.PositiveInfinity, 0);
             Coordinate2D lowerRightBound = new(float.NegativeInfinity, float.NegativeInfinity, 0);
             foreach (Coordinate2D vertex in _vertices)
