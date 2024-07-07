@@ -50,6 +50,12 @@
             zoomInput = new NumericUpDown();
             label4 = new Label();
             groupBox2 = new GroupBox();
+            groupBox3 = new GroupBox();
+            panel4 = new Panel();
+            tInput = new NumericUpDown();
+            label5 = new Label();
+            checkBox2 = new CheckBox();
+            checkBox1 = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -61,6 +67,9 @@
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)zoomInput).BeginInit();
             groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)tInput).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -285,11 +294,77 @@
             groupBox2.TabStop = false;
             groupBox2.Text = "View";
             // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(panel4);
+            groupBox3.Controls.Add(checkBox2);
+            groupBox3.Controls.Add(checkBox1);
+            groupBox3.Location = new Point(792, 42);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(200, 197);
+            groupBox3.TabIndex = 12;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Bezier";
+            // 
+            // panel4
+            // 
+            panel4.Controls.Add(tInput);
+            panel4.Controls.Add(label5);
+            panel4.Location = new Point(22, 90);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(143, 29);
+            panel4.TabIndex = 5;
+            // 
+            // tInput
+            // 
+            tInput.DecimalPlaces = 2;
+            tInput.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            tInput.Location = new Point(24, 3);
+            tInput.Maximum = new decimal(new int[] { 2, 0, 0, 0 });
+            tInput.Minimum = new decimal(new int[] { 1, 0, 0, int.MinValue });
+            tInput.Name = "tInput";
+            tInput.Size = new Size(116, 23);
+            tInput.TabIndex = 12;
+            tInput.Value = new decimal(new int[] { 5, 0, 0, 65536 });
+            tInput.ValueChanged += tInput_ValueChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(4, 6);
+            label5.Name = "label5";
+            label5.Size = new Size(14, 15);
+            label5.TabIndex = 2;
+            label5.Text = "t:";
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(22, 65);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(134, 19);
+            checkBox2.TabIndex = 2;
+            checkBox2.Text = "Show Control Points";
+            checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.CheckedChanged += showControlPoints_CheckedChanged;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(22, 40);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(123, 19);
+            checkBox1.TabIndex = 1;
+            checkBox1.Text = "Show Bezier Curve";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.CheckedChanged += showBezier_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1001, 450);
+            Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(panel1);
@@ -312,6 +387,11 @@
             panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)zoomInput).EndInit();
             groupBox2.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)tInput).EndInit();
             ResumeLayout(false);
         }
 
@@ -338,5 +418,11 @@
         private GroupBox groupBox2;
         private Button splitButton;
         private NumericUpDown splitInput;
+        private GroupBox groupBox3;
+        private CheckBox checkBox2;
+        private CheckBox checkBox1;
+        private Panel panel4;
+        private Label label5;
+        private NumericUpDown tInput;
     }
 }

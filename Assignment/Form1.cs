@@ -125,94 +125,22 @@ namespace Assignment
             }
         }
 
-//        private void button2_Click(object sender, EventArgs e)
-//        {
-//            //initialize the bezier curve from obj file
-//            //clears old bezier, if any
-//            ObjectReader objReader = new();
-//            List<Coordinate2D> coordList = objReader.ReadFile("BezierCurve_1.obj");
-//            foreach (Coordinate2D coord in coordList)
-//            {
-//                textBox1.AppendText(coord.ToString() + Environment.NewLine);
-//            }
-//            this.bezier = new(coordList);
-//        }
-//
-//        private void DrawBezierCurve(Bezier bezier, Graphics g, float zoom, Coordinate2D displacementVector)
-//        {
-//            //Draw the bezier curve
-//            //initialize pens
-//            Pen redPen = new Pen(Color.Red)
-//            {
-//                Width = 2
-//            };
-//            Pen blackPen = new Pen(Color.Black)
-//            {
-//                Width = 2
-//            };
-//            //draw curve
-//            List<Coordinate2D> curvePoints = new();
-//            for (float t = -1; t <= 2; t += 0.01f)
-//            {
-//                Coordinate2D curvePoint = bezier.GetCurvePoint(t);
-//                curvePoints.Add(curvePoint + displacementVector);
-//            }
-//            for (int i = 0; i < curvePoints.Count - 1; i++)
-//            {
-//                Point point1 = new Point(Convert.ToInt32(curvePoints[i].x * zoom), Convert.ToInt32(curvePoints[i].y * zoom));
-//                Point point2 = new Point(Convert.ToInt32(curvePoints[i + 1].x * zoom), Convert.ToInt32(curvePoints[i + 1].y * zoom));
-//                int radius = Convert.ToInt32(1 * zoom);
-//                g.DrawLine(blackPen, point1, point2);
-//            }
-//        }
-//
-//        private void button3_Click(object sender, EventArgs e)
-//        {
-//            //add control point
-//            float x = float.Parse(numericUpDown1.Value.ToString());
-//            float y = float.Parse(numericUpDown2.Value.ToString());
-//            Coordinate2D newPoint = new(x, y, 1);
-//            textBox1.AppendText(newPoint.ToString() + Environment.NewLine);
-//            bezier.AddPoint(newPoint);
-//        }
-//
-//        private void button4_Click(object sender, EventArgs e)
-//        {
-//            //remove control point
-//            int index = Convert.ToInt32(numericUpDown3.Value);
-//            try
-//            {
-//                bezier.RemovePoint(index);
-//            }
-//            catch (ArgumentOutOfRangeException ex)
-//            {
-//                textBox1.AppendText(ex.Message + Environment.NewLine);
-//            }
-//        }
-//
-//        private void button6_Click(object sender, EventArgs e)
-//        {
-//            //draw the bezier curve
-//            if (bezier.controlpoints.Count > 0)
-//            {
-//                pictureBox1.Refresh();
-//                //draw the curve
-//                DrawObject(bezier.controlpoints, pictureBox1.CreateGraphics(), 10.0f, new Coordinate2D(40, 30, 0));
-//                DrawBezierCurve(bezier, pictureBox1.CreateGraphics(), 10.0f, new Coordinate2D(40, 30, 0));
-//            }
-//        }
-//
-//        private void button5_Click(object sender, EventArgs e)
-//        {
-//            //refresh the picturebox
-//            pictureBox1.Refresh();
-//        }
-//
-//        private void button7_Click(object sender, EventArgs e)
-//        {
-//            //clear the textbox
-//            textBox1.Clear();
-//        }
+        private void showBezier_CheckedChanged(object sender, EventArgs e)
+        {
+            renderLayer.ShowBezierCheck = !renderLayer.ShowBezierCheck;
+            renderLayer.Render();
+        }
 
+        private void showControlPoints_CheckedChanged(object sender, EventArgs e)
+        {
+            renderLayer.ShowControlPointsCheck = !renderLayer.ShowControlPointsCheck;
+            renderLayer.Render();
+        }
+
+        private void tInput_ValueChanged(object sender, EventArgs e)
+        {
+            renderLayer.T = Convert.ToSingle(tInput.Value);
+            renderLayer.Render();
+        }
     }
 }

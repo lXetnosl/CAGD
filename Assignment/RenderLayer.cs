@@ -20,6 +20,10 @@ namespace Assignment
         private List<Coordinate2D> _selectedVertices;
         private List<Edge2D> _edges;
 
+        internal bool ShowBezierCheck = false;
+        internal bool ShowControlPointsCheck = false;
+        private Bezier bezier;
+        internal float T = 0.5f;
         internal float VertexRadius
         {
             get { return _vertexRadius; }
@@ -288,6 +292,75 @@ namespace Assignment
                 Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
                 Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
                 graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+            }
+
+            bezier = new Bezier(_vertices);
+            if (ShowBezierCheck)
+            {
+                if (_vertices.Count == 0)
+                {
+                    return;
+                }
+                List<Coordinate2D> curvePoints = new();
+                for (float t = -1; t <= 2; t += 0.01f)
+                {
+                    Coordinate2D curvePoint = bezier.GetCurvePoint(t);
+                    curvePoints.Add(curvePoint + _globalDisplacement);
+                }
+                for (int i = 0; i < curvePoints.Count - 1; i++)
+                {
+                    Coordinate2D start = curvePoints[i] * _globalZoom;
+                    Coordinate2D end = curvePoints[i + 1] * _globalZoom;
+                    graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+                }
+            }
+            if (ShowControlPointsCheck)
+            {
+                if (_vertices.Count == 0)
+                {
+                    return;
+                }
+                bezier.GetCurvePoint(T);
+                List<Pen> ctrlEdgePens = new List<Pen>();
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 0), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 0, 255), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
+
+                List<Coordinate2D> controlPoints = bezier.GetControlPoints(1);
+                List<Edge2D> controlEdges = new();
+                int iteration = 1;
+                while (controlPoints.Count > 1)
+                {
+                    controlPoints = bezier.GetControlPoints(iteration);
+                    foreach (Coordinate2D controlPoint in controlPoints)
+                    {
+                        Coordinate2D curPoint = (controlPoint + _globalDisplacement) * _globalZoom;
+                        float transformedRadius = _vertexRadius * _globalZoom;
+                        if (controlPoints.Count == 1)
+                        {
+                            graphics.DrawEllipse(new Pen(Color.FromArgb(255, 0, 0), _penWidth+2), curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                        }
+                        else
+                        {
+                            graphics.DrawEllipse(ctrlEdgePens[(iteration + 1) % 4], curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                        }
+                    }
+                    iteration++;
+
+                    controlEdges.Clear();
+                    for (int j = 0; j < controlPoints.Count - 1; j++)
+                    {
+                        controlEdges.Add(new Edge2D(controlPoints[j], controlPoints[j + 1]));
+                    }
+                    foreach (Edge2D edge in controlEdges)
+                    {
+                        Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
+                        Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
+                        graphics.DrawLine(ctrlEdgePens[iteration%4], start.X, start.Y, end.X, end.Y);
+                    }
+                }
+                
             }
         }
     }
