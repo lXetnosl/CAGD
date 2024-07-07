@@ -73,18 +73,17 @@ namespace Assignment
                 throw new ArgumentException("Vertex is not a valid point.");
             }
 
+            // Wir brauchen immer einen durchgängigen Polygonzug und kein Netz.
             if (!isWorldSpace)
             {
-                _vertices.Add(coord);
+                int idx = _vertices.FindIndex(x => x.Equals(_selectedVertices[0]));
+                int idx2 = _vertices.FindIndex(x => x.Equals(_selectedVertices[1]));
+                int index = idx > idx2 ? idx : idx2;
+                _vertices.Insert(index, coord);
             }
             else
             {
                 _vertices.Add(new Coordinate2D(coord.X / _globalZoom - _globalDisplacement.X, coord.Y / _globalZoom - _globalDisplacement.Y, 1));
-            }
-
-            foreach (Coordinate2D vertex in _selectedVertices)
-            {
-                _edges.Add(new Edge2D(vertex, _vertices[^1]));
             }
         }
 
@@ -96,7 +95,7 @@ namespace Assignment
                 return;
             }
 
-            DeleteVertex(toBeDeleted);
+            _vertices.Remove(toBeDeleted);
             _selectedVertices.Remove(toBeDeleted);
         }
 
@@ -104,26 +103,9 @@ namespace Assignment
         {
             foreach (Coordinate2D vertex in _selectedVertices)
             {
-                DeleteVertex(vertex);
+                _vertices.Remove(vertex);
             }
             _selectedVertices.Clear();
-        }
-
-        private void DeleteVertex(Coordinate2D vertex)
-        {
-            List<Edge2D> connectedEdges = new List<Edge2D>();
-            foreach (Edge2D edge in _edges)
-            {
-                if(edge.Start == vertex || edge.End == vertex)
-                {
-                    connectedEdges.Add(edge);
-                }
-            }
-            foreach (Edge2D edge in connectedEdges)
-            {
-                _edges.Remove(edge);
-            }
-            _vertices.Remove(vertex);
         }
 
         internal void MoveSelected(Coordinate2D moveVector)
@@ -158,11 +140,6 @@ namespace Assignment
             if(_selectedVertices.Count != 2)
             {
                 throw new NotImplementedException("Operation not implemented for selections below or above 2 vertices.");
-            }
-
-            if (!RemoveEdge(_selectedVertices[0], _selectedVertices[1]))
-            {
-                return false;
             }
 
             Coordinate2D newVertex = new(0,0,1);
@@ -240,36 +217,6 @@ namespace Assignment
             _globalDisplacement += displacement;
         }
 
-        internal void AddEdge(Edge2D edge)
-        {
-            _edges.Add(edge);
-        }
-
-        internal void AddEdge(Coordinate2D start, Coordinate2D end) 
-        {
-            AddEdge(new Edge2D(start, end));
-        }
-
-        internal bool RemoveEdge(Edge2D edge)
-        {
-            foreach(Edge2D curEdge in _edges)
-            {
-                if( curEdge.Start.Equals(edge.Start) && curEdge.End.Equals(edge.End) ||
-                    curEdge.Start.Equals(edge.End) && curEdge.End.Equals(edge.Start))
-                {
-                    _edges.Remove(curEdge);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        internal bool RemoveEdge(Coordinate2D start, Coordinate2D end)
-        {
-            return RemoveEdge(new Edge2D(start, end));
-        }
-
         internal void AddFromFile(string path)
         {
             ObjectReader reader = new();
@@ -278,7 +225,7 @@ namespace Assignment
             _edges.Clear();
             for(int i = 0; i < _vertices.Count - 1; i++) 
             {
-                AddEdge(_vertices[i], _vertices[i+1]);
+                _edges.Add(new Edge2D(_vertices[i], _vertices[i + 1]));
             }
         }
 
@@ -331,7 +278,12 @@ namespace Assignment
                 graphics.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
             }
 
-            foreach(Edge2D edge in _edges)
+            _edges.Clear();
+            for (int i = 0; i < _vertices.Count - 1; i++)
+            {
+                _edges.Add(new Edge2D(_vertices[i], _vertices[i + 1]));
+            }
+            foreach (Edge2D edge in _edges)
             {
                 Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
                 Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
