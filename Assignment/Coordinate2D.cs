@@ -46,6 +46,13 @@ namespace Assignment
             this.epsilon = epsilon;
         }
 
+        public Coordinate2D(Coordinate2D oldPoint, bool switchType)
+        {
+            x = oldPoint.X;
+            y = oldPoint.Y;
+            epsilon = switchType ? (oldPoint.epsilon == 1 ? 0 : 1) : oldPoint.epsilon;
+        }
+
         public static Coordinate2D operator +(Coordinate2D left, Coordinate2D right)
         {
             Coordinate2D result = new();

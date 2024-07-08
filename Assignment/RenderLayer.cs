@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,10 @@ namespace Assignment
         private List<Coordinate2D> _selectedVertices;
         private List<Edge2D> _edges;
 
+        internal bool useDeCasteljau = true;
         internal bool ShowBezierCheck = false;
         internal bool ShowControlPointsCheck = false;
+        internal bool ShowBernsteinPolynoms = false;
         private Bezier bezier;
         internal float T = 0.5f;
         internal float VertexRadius
@@ -294,7 +297,7 @@ namespace Assignment
                 graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
             }
 
-            bezier = new Bezier(_vertices);
+            bezier = useDeCasteljau ? new Bezier_DeCasteljau(_vertices) : new Bezier_Bernstein(_vertices);
             if (ShowBezierCheck)
             {
                 if (_vertices.Count == 0)
@@ -302,7 +305,7 @@ namespace Assignment
                     return;
                 }
                 List<Coordinate2D> curvePoints = new();
-                for (float t = -1; t <= 2; t += 0.01f)
+                for (float t = 0; t <= 1; t += 0.01f)
                 {
                     Coordinate2D curvePoint = bezier.GetCurvePoint(t);
                     curvePoints.Add(curvePoint + _globalDisplacement);
@@ -314,6 +317,7 @@ namespace Assignment
                     graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
                 }
             }
+
             if (ShowControlPointsCheck)
             {
                 if (_vertices.Count == 0)
@@ -361,6 +365,35 @@ namespace Assignment
                     }
                 }
                 
+            }
+
+            if (ShowBernsteinPolynoms)
+            {
+                List<Pen> ctrlEdgePens = new List<Pen>();
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 0), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 0, 255), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
+                ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
+
+                for (int i = 1; i < _vertices.Count + 1; i++)
+                {
+                    List<Coordinate2D> controlPoints = bezier.GetControlPoints(i);
+                    List<Edge2D> controlEdges = new();
+
+                    if (controlPoints == null)
+                        break;
+
+                    for (int j = 0; j < controlPoints.Count - 1; j++)
+                    {
+                        controlEdges.Add(new Edge2D(controlPoints[j], controlPoints[j + 1]));
+                    }
+                    foreach (Edge2D edge in controlEdges)
+                    {
+                        Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
+                        Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
+                        graphics.DrawLine(ctrlEdgePens[i % 4], start.X, start.Y, end.X, end.Y);
+                    }
+                }
             }
         }
     }

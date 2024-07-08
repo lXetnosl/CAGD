@@ -133,13 +133,42 @@ namespace Assignment
 
         private void showControlPoints_CheckedChanged(object sender, EventArgs e)
         {
-            renderLayer.ShowControlPointsCheck = !renderLayer.ShowControlPointsCheck;
+            if(renderLayer.useDeCasteljau)
+                renderLayer.ShowControlPointsCheck = !renderLayer.ShowControlPointsCheck;
+            else
+                renderLayer.ShowBernsteinPolynoms = !renderLayer.ShowBernsteinPolynoms;
             renderLayer.Render();
         }
 
         private void tInput_ValueChanged(object sender, EventArgs e)
         {
             renderLayer.T = Convert.ToSingle(tInput.Value);
+            renderLayer.Render();
+        }
+
+        private void deCastButton_Click(object sender, EventArgs e)
+        {
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            renderLayer.useDeCasteljau = true;
+            renderLayer.ShowBezierCheck = false;
+            renderLayer.ShowBernsteinPolynoms = false;
+            deCastButton.BackColor = Color.AliceBlue;
+            bernsteinButton.BackColor = SystemColors.Control;
+            checkBox2.Text = "Show Control Points";
+            renderLayer.Render();
+        }
+
+        private void bernsteinButton_Click(object sender, EventArgs e)
+        {
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            renderLayer.useDeCasteljau = false;
+            renderLayer.ShowBezierCheck = false;
+            renderLayer.ShowBernsteinPolynoms = false;
+            bernsteinButton.BackColor = Color.AliceBlue;
+            deCastButton.BackColor = SystemColors.Control;
+            checkBox2.Text = "Show Polynoms";
             renderLayer.Render();
         }
     }

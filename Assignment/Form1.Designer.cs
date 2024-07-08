@@ -51,6 +51,8 @@
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            bernsteinButton = new Button();
+            deCastButton = new Button();
             panel4 = new Panel();
             tInput = new NumericUpDown();
             label5 = new Label();
@@ -296,6 +298,8 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(bernsteinButton);
+            groupBox3.Controls.Add(deCastButton);
             groupBox3.Controls.Add(panel4);
             groupBox3.Controls.Add(checkBox2);
             groupBox3.Controls.Add(checkBox1);
@@ -306,11 +310,31 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
             // 
+            // bernsteinButton
+            // 
+            bernsteinButton.Location = new Point(101, 22);
+            bernsteinButton.Name = "bernsteinButton";
+            bernsteinButton.Size = new Size(82, 23);
+            bernsteinButton.TabIndex = 7;
+            bernsteinButton.Text = "Bernstein";
+            bernsteinButton.UseVisualStyleBackColor = true;
+            bernsteinButton.Click += bernsteinButton_Click;
+            // 
+            // deCastButton
+            // 
+            deCastButton.Location = new Point(21, 22);
+            deCastButton.Name = "deCastButton";
+            deCastButton.Size = new Size(82, 23);
+            deCastButton.TabIndex = 6;
+            deCastButton.Text = "De Casteljau";
+            deCastButton.UseVisualStyleBackColor = true;
+            deCastButton.Click += deCastButton_Click;
+            // 
             // panel4
             // 
             panel4.Controls.Add(tInput);
             panel4.Controls.Add(label5);
-            panel4.Location = new Point(22, 90);
+            panel4.Location = new Point(22, 115);
             panel4.Name = "panel4";
             panel4.Size = new Size(143, 29);
             panel4.TabIndex = 5;
@@ -340,7 +364,7 @@
             // checkBox2
             // 
             checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(22, 65);
+            checkBox2.Location = new Point(22, 90);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(134, 19);
             checkBox2.TabIndex = 2;
@@ -351,7 +375,7 @@
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(22, 40);
+            checkBox1.Location = new Point(22, 65);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(123, 19);
             checkBox1.TabIndex = 1;
@@ -424,5 +448,7 @@
         private Panel panel4;
         private Label label5;
         private NumericUpDown tInput;
+        private Button bernsteinButton;
+        private Button deCastButton;
     }
 }
