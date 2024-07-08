@@ -58,6 +58,7 @@
             label5 = new Label();
             checkBox2 = new CheckBox();
             checkBox1 = new CheckBox();
+            clearButton = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -138,12 +139,13 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(clearButton);
             panel1.Controls.Add(deleteButton);
             panel1.Controls.Add(selectButton);
             panel1.Controls.Add(addButton);
             panel1.Location = new Point(30, 19);
             panel1.Name = "panel1";
-            panel1.Size = new Size(173, 25);
+            panel1.Size = new Size(219, 25);
             panel1.TabIndex = 7;
             // 
             // groupBox1
@@ -383,6 +385,18 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += showBezier_CheckedChanged;
             // 
+            // clearButton
+            // 
+            clearButton.Appearance = Appearance.Button;
+            clearButton.Location = new Point(168, 1);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new Size(50, 25);
+            clearButton.TabIndex = 6;
+            clearButton.Text = "Clear";
+            clearButton.TextAlign = ContentAlignment.MiddleCenter;
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.CheckedChanged += clearButton_CheckedChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -450,5 +464,6 @@
         private NumericUpDown tInput;
         private Button bernsteinButton;
         private Button deCastButton;
+        private RadioButton clearButton;
     }
 }

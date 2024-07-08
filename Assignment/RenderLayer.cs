@@ -115,6 +115,12 @@ namespace Assignment
             _selectedVertices.Clear();
         }
 
+        internal void ClearVertices()
+        {
+            _vertices.Clear();
+            _selectedVertices.Clear();
+        }
+
         internal void MoveSelected(Coordinate2D moveVector)
         {
             for (int i = 0; i < _selectedVertices.Count; i++)
@@ -375,7 +381,7 @@ namespace Assignment
                 ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
                 ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
 
-                for (int i = 1; i < _vertices.Count + 1; i++)
+                for (int i = 0; i < _vertices.Count; i++)
                 {
                     List<Coordinate2D> controlPoints = bezier.GetControlPoints(i);
                     List<Edge2D> controlEdges = new();

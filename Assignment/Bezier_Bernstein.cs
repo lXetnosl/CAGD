@@ -54,6 +54,7 @@ namespace Assignment
 
         public Coordinate2D GetCurvePoint(float t)
         {
+            var bezierCurve = CalculateBezierCurve(ControlPoints);
             //return if controlpoints is empty
             if (ControlPoints.Count == 0)
             {
@@ -70,25 +71,52 @@ namespace Assignment
                 return ControlPoints[0];
             }
 
-            Coordinate2D calcedCoord;
-            switch (ControlPoints.Count)
+            return new Coordinate2D(bezierCurve(t).x, bezierCurve(t).y);
+        }
+
+        // Rekursive Funktion zum Berechnen des Bernsteinpolynoms B_{i,n}(t)
+        public static float BernsteinRecursive(int n, int i, float t)
+        {
+            if (n == 0)
+                return (i == 0) ? 1.0f : 0.0f;
+
+            float a = (i > 0) ? t * BernsteinRecursive(n - 1, i - 1, t) : 0.0f;
+            float b = (i < n) ? (1 - t) * BernsteinRecursive(n - 1, i, t) : 0.0f;
+
+            return a + b;
+        }
+
+        // Funktion zum Berechnen der Bernsteinpolynome für einen gegebenen Grad n
+        public static List<Func<float, float>> CalculateBernsteinPolynomials(int n)
+        {
+            List<Func<float, float>> polynomials = new List<Func<float, float>>();
+
+            for (int i = 0; i <= n; i++)
             {
-                case 2:
-                    calcedCoord = (1 - t) * ControlPointsVec[0] + t * ControlPointsVec[1];
-                    break;
-                case 3:
-                    calcedCoord = ((float)Math.Pow((1 - t), 2)) * ControlPointsVec[0] + 2 * t * (1 - t) * ControlPointsVec[1] +
-                                  ((float)Math.Pow(t, 2)) * ControlPointsVec[2];
-                    break;
-                case 4:
-                    calcedCoord = ((float)Math.Pow((1 - t), 3)) * ControlPointsVec[0] + 3 * t * ((float)Math.Pow((1 - t), 2)) * ControlPointsVec[1] +
-                                  3 * ((float)Math.Pow(t, 2)) * (1 - t) * ControlPointsVec[2] + ((float)Math.Pow(t, 3)) * ControlPointsVec[3];
-                    break;
-                default:
-                    calcedCoord = null;
-                    break;
+                int index = i; // Lokale Kopie von i für den Lambda-Ausdruck
+                polynomials.Add(t => BernsteinRecursive(n, index, t));
             }
-            return calcedCoord;
+
+            return polynomials;
+        }
+
+        // Funktion zum Berechnen der Bezierkurve
+        public static Func<float, (float x, float y)> CalculateBezierCurve(List<Coordinate2D> controlPoints)
+        {
+            int n = controlPoints.Count - 1;
+            var bernsteinPolynomials = CalculateBernsteinPolynomials(n);
+
+            return t =>
+            {
+                float x = 0, y = 0;
+                for (int i = 0; i <= n; i++)
+                {
+                    float b = bernsteinPolynomials[i](t);
+                    x += b * controlPoints[i].X;
+                    y += b * controlPoints[i].Y;
+                }
+                return (x, y);
+            };
         }
 
         public List<Coordinate2D> GetControlPoints(int iteration)
@@ -96,66 +124,72 @@ namespace Assignment
             if (iteration > ControlPoints.Count)
                 return null;
 
+            var bernsteinPolynomials = CalculateBernsteinPolynomials(ControlPoints.Count - 1);
+
             var output = new List<Coordinate2D>();
             for (int i = 0; i <= 10; i++)
             {
                 float t = 1f / 10 * i;
+
+
+                output.Add(new Coordinate2D(t, bernsteinPolynomials[iteration](t)));
+
                 Coordinate2D calcedCoord;
-                switch (ControlPoints.Count)
-                {
-                    case 0:
-                    case 1:
-                        return null;
-                    case 2:
-                        switch(iteration)
-                        {
-                            case 1:
-                                output.Add(new Coordinate2D(t, 1 - t, 1));
-                                break;
-                            case 2:
-                                output.Add(new Coordinate2D(t, t, 1));
-                                break;
-                            default:
-                                return null;
-                        }
+                //switch (ControlPoints.Count)
+                //{
+                //    case 0:
+                //    case 1:
+                //        return null;
+                //    case 2:
+                //        switch(iteration)
+                //        {
+                //            case 1:
+                //                output.Add(new Coordinate2D(t, 1 - t, 1));
+                //                break;
+                //            case 2:
+                //                output.Add(new Coordinate2D(t, t, 1));
+                //                break;
+                //            default:
+                //                return null;
+                //        }
                         
-                        break;
-                    case 3:
-                        switch (iteration)
-                        {
-                            case 1:
-                                output.Add(new Coordinate2D(t, (float)Math.Pow(1 - t, 2), 1));
-                                break;
-                            case 2:
-                                output.Add(new Coordinate2D(t, 2 * t * (1 - t), 1));
-                                break;
-                            case 3:
-                                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 2), 1));
-                                break;
-                            default:
-                                return null;
-                        }
-                        break;
-                    case 4:
-                        switch (iteration)
-                        {
-                            case 1:
-                                output.Add(new Coordinate2D(t, (float)Math.Pow((1 - t), 3), 1));
-                                break;
-                            case 2:
-                                output.Add(new Coordinate2D(t, 3 * t * ((float)Math.Pow(1 - t, 2)), 1));
-                                break;
-                            case 3:
-                                output.Add(new Coordinate2D(t, 3 * ((float)Math.Pow(t, 2)) * (1 - t), 1));
-                                break;
-                            case 4:
-                                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 3), 1));
-                                break;
-                            default:
-                                return null;
-                        }
-                        break;
-                }
+                //        break;
+                //    case 3:
+                //        switch (iteration)
+                //        {
+                //            case 1:
+                //                output.Add(new Coordinate2D(t, (float)Math.Pow(1 - t, 2), 1));
+                //                break;
+                //            case 2:
+                //                output.Add(new Coordinate2D(t, 2 * t * (1 - t), 1));
+                //                break;
+                //            case 3:
+                //                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 2), 1));
+                //                break;
+                //            default:
+                //                return null;
+                //        }
+                //        break;
+                //    case 4:
+                //        switch (iteration)
+                //        {
+                //            case 1:
+                //                output.Add(new Coordinate2D(t, (float)Math.Pow((1 - t), 3), 1));
+                //                break;
+                //            case 2:
+                //                output.Add(new Coordinate2D(t, 3 * t * ((float)Math.Pow(1 - t, 2)), 1));
+                //                break;
+                //            case 3:
+                //                output.Add(new Coordinate2D(t, 3 * ((float)Math.Pow(t, 2)) * (1 - t), 1));
+                //                break;
+                //            case 4:
+                //                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 3), 1));
+                //                break;
+                //            default:
+                //                return null;
+                //        }
+                //        break;
+                //}
             }
             return formatOutput(output);
         }

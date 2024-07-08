@@ -133,7 +133,7 @@ namespace Assignment
 
         private void showControlPoints_CheckedChanged(object sender, EventArgs e)
         {
-            if(renderLayer.useDeCasteljau)
+            if (renderLayer.useDeCasteljau)
                 renderLayer.ShowControlPointsCheck = !renderLayer.ShowControlPointsCheck;
             else
                 renderLayer.ShowBernsteinPolynoms = !renderLayer.ShowBernsteinPolynoms;
@@ -169,6 +169,12 @@ namespace Assignment
             bernsteinButton.BackColor = Color.AliceBlue;
             deCastButton.BackColor = SystemColors.Control;
             checkBox2.Text = "Show Polynoms";
+            renderLayer.Render();
+        }
+
+        private void clearButton_CheckedChanged(object sender, EventArgs e)
+        {
+            renderLayer.ClearVertices();
             renderLayer.Render();
         }
     }
