@@ -9,6 +9,7 @@ namespace Assignment
 {
     public class Coordinate2D
     {
+        // Class for 2D coordinates
         private float x, y, epsilon;
 
         public float X
@@ -41,6 +42,8 @@ namespace Assignment
 
         public Coordinate2D(float x = 0, float y = 0, int epsilon = 0)
         {
+            // Initialize a 2D coordinate with x and y values and epsilon value
+            // epsilon is 0 for vectors and 1 for points
             this.x = x;
             this.y = y;
             this.epsilon = epsilon;
@@ -48,6 +51,7 @@ namespace Assignment
 
         public Coordinate2D(Coordinate2D oldPoint, bool switchType)
         {
+            // Copy constructor for Coordinate2D
             x = oldPoint.X;
             y = oldPoint.Y;
             epsilon = switchType ? (oldPoint.epsilon == 1 ? 0 : 1) : oldPoint.epsilon;
@@ -55,6 +59,7 @@ namespace Assignment
 
         public static Coordinate2D operator +(Coordinate2D left, Coordinate2D right)
         {
+            // Operator for adding two Coordinate2D objects together
             Coordinate2D result = new();
             result.x = left.x + right.x;
             result.y = left.y + right.y;
@@ -68,6 +73,7 @@ namespace Assignment
 
         public static Coordinate2D operator -(Coordinate2D left, Coordinate2D right)
         {
+            // Operator for subtracting two Coordinate2D objects
             Coordinate2D result = new();
             result.x = left.x - right.x;
             result.y = left.y - right.y;
@@ -81,6 +87,7 @@ namespace Assignment
 
         public static Coordinate2D operator *(float scalar, Coordinate2D coord)
         {
+            // Operator for scalar multiplication of a Coordinate2D object
             Coordinate2D result = new();
             result.x = coord.x * scalar;
             result.y = coord.y * scalar;
@@ -94,13 +101,15 @@ namespace Assignment
 
         public static Coordinate2D operator *(Coordinate2D coord, float scalar)
         {
+            // Operator for scalar multiplication of a Coordinate2D object
             Coordinate2D result = scalar * coord;
             return result;
         }
 
         public static Coordinate2D operator /(Coordinate2D coord, float scalar)
         {
-            if(scalar == 0)
+            // Operator for scalar division of a Coordinate2D object
+            if (scalar == 0)
             {
                 throw new DivideByZeroException();
             }
@@ -110,6 +119,7 @@ namespace Assignment
 
         public static float operator *(Coordinate2D left, Coordinate2D right)
         {
+            // Operator for scalar product of two Coordinate2D objects
             if (left.epsilon != 0 || right.epsilon != 0)
             {
                 throw new ArgumentException("Scalar product can only be calculated for vectors.");

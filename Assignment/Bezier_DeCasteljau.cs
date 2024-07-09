@@ -20,29 +20,6 @@ namespace Assignment
 			return;
 		}
 
-		public void AddPoint(Coordinate2D coord) 
-		{
-			this.controlpoints.Add(coord);
-			return;
-		}
-
-		public void RemovePoint(int index)
-		{
-			//check if index is negative
-			if (index < 0)
-			{
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-			//check if index is greater than the number of controlpoints
-			if (this.controlpoints.Count <= index)
-			{
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-			//remove the controlpoint at the specified index
-			controlpoints.RemoveAt(index);
-			return;
-		}
-
 		public Coordinate2D GetCurvePoint(float t)
 		{
             //return if controlpoints is empty
@@ -75,9 +52,29 @@ namespace Assignment
 			return this.nextBezierIteration.GetCurvePoint(t);
 		}
 
-        
+        public void Derivation()
+        {
+            //return if controlpoints is empty
+            if (this.controlpoints.Count == 0)
+            {
+                throw new InvalidOperationException("No control points");
+            }
+            //if there is only one control point left, return it
+            if (this.controlpoints.Count == 1)
+            {
+                return;
+            }
+            //if there is no next iteration, throw an exception
+            if (this.nextBezierIteration == null)
+            {
+                throw new InvalidOperationException("No next iteration");
+            }
+            //calculate the derivation of the next iteration
+            this.nextBezierIteration.Derivation();
+            return;
+        }
 
-		public List<Coordinate2D> GetControlPoints(int iteration)
+        public List<Coordinate2D> GetControlPoints(int iteration)
         {
             //return if controlpoints is empty
             if (this.controlpoints.Count == 0)
@@ -107,6 +104,8 @@ namespace Assignment
             //return the controlpoints of the next iteration
             return this.nextBezierIteration.GetControlPoints(iteration - 1);
         }
+
+
 
         public override string ToString()
 		{

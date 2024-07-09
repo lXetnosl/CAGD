@@ -10,17 +10,22 @@ namespace Assignment
 {
     internal class RenderLayer
     {
+        // Zoom and rendering variables.
         private int _globalZoom = 20;
         private float _vertexRadius = 0.5f;
         private float _penWidth = 2.0f;
 
+        // Render target and displacement variables.
         private PictureBox _renderTarget;
         private Coordinate2D _centerDisplacement;
         private Coordinate2D _globalDisplacement;
+
+        // Vertex and edge lists.
         private List<Coordinate2D> _vertices;
         private List<Coordinate2D> _selectedVertices;
         private List<Edge2D> _edges;
 
+        // Bezier curve variables and flags.
         internal bool useDeCasteljau = true;
         internal bool ShowBezierCheck = false;
         internal bool ShowControlPointsCheck = false;
@@ -33,6 +38,7 @@ namespace Assignment
             set { _vertexRadius = value; }
         }
 
+        // Zoom property for rendering.
         internal int Zoom
         {
             get { return _globalZoom; }
@@ -53,11 +59,13 @@ namespace Assignment
 
         internal int SelectedCount
         {
+            // Get the number of selected vertices.
             get { return _selectedVertices.Count; }
         }
 
         internal RenderLayer(PictureBox renderTarget)
         {
+            // Initialize the render layer.
             _renderTarget = renderTarget;
             _vertices = new List<Coordinate2D>();
             _selectedVertices = new List<Coordinate2D>();
@@ -70,17 +78,21 @@ namespace Assignment
 
         internal RenderLayer(PictureBox renderTarget, string path) : this(renderTarget)
         {
+            // Initialize the render layer with vertices from a file.
             AddFromFile(path);
         }
 
         internal void AddVertex(Coordinate2D coord, bool isWorldSpace = true)
         {
-            if(coord == null || !coord.Type.Equals("Point")) 
+            // Add a vertex to the list of vertices.
+            if (coord == null || !coord.Type.Equals("Point")) 
             {
                 throw new ArgumentException("Vertex is not a valid point.");
             }
 
-            // Wir brauchen immer einen durchgängigen Polygonzug und kein Netz.
+            // isWorldSpace is used to determine if the vertex was added by mouse click or by split method.
+            // If the vertex was added by mouse click, it is added to the end of the list.
+            // If the vertex was added by split method, it is added between the two selected vertices.
             if (!isWorldSpace)
             {
                 int idx = _vertices.FindIndex(x => x.Equals(_selectedVertices[0]));
@@ -96,6 +108,7 @@ namespace Assignment
 
         internal void DeleteVertexAt(Coordinate2D vertex)
         {
+            // Delete a vertex at the specified location.
             Coordinate2D? toBeDeleted = GetVertexAt(vertex, false);
             if(toBeDeleted == null)
             {
@@ -108,6 +121,7 @@ namespace Assignment
 
         internal void DeleteSelected()
         {
+            // Delete all selected vertices.
             foreach (Coordinate2D vertex in _selectedVertices)
             {
                 _vertices.Remove(vertex);
@@ -117,12 +131,14 @@ namespace Assignment
 
         internal void ClearVertices()
         {
+            // Delete all vertices.
             _vertices.Clear();
             _selectedVertices.Clear();
         }
 
         internal void MoveSelected(Coordinate2D moveVector)
         {
+            // Move all selected vertices by the specified vector.
             for (int i = 0; i < _selectedVertices.Count; i++)
             {
                 int vertIdx = _vertices.FindIndex(x => x.Equals(_selectedVertices[i]));
@@ -150,7 +166,8 @@ namespace Assignment
 
         internal bool SplitSelected(float splitPct = 0.5f)
         {
-            if(_selectedVertices.Count != 2)
+            // Split the edge between the two selected vertices at the specified percentage and create a new vertex.
+            if (_selectedVertices.Count != 2)
             {
                 throw new NotImplementedException("Operation not implemented for selections below or above 2 vertices.");
             }
@@ -165,6 +182,7 @@ namespace Assignment
 
         internal Coordinate2D? GetVertexAt(Coordinate2D coord, bool select = false) 
         {
+            // Find the vertex at the specified mouse click location.
             Coordinate2D transformedCoord = new Coordinate2D(coord.X / _globalZoom - _globalDisplacement.X, coord.Y / _globalZoom - _globalDisplacement.Y, 1);
             foreach (Coordinate2D vertex in _vertices) 
             {
@@ -196,7 +214,8 @@ namespace Assignment
 
         internal void CenterObject()
         {
-            if(_vertices.Count <= 0)
+            // Center the object in the render target.
+            if (_vertices.Count <= 0)
             {
                 return;
             }
@@ -232,6 +251,7 @@ namespace Assignment
 
         internal void AddFromFile(string path)
         {
+            // Overwrite current vertices with vertices from a file.
             ObjectReader reader = new();
             _vertices = reader.ReadFile(path);
             _selectedVertices.Clear();
@@ -244,6 +264,8 @@ namespace Assignment
 
         internal void Render()
         {
+            // Render the vertices and edges.
+            // Initialize pens for rendering.
             Pen unselectedPen = new Pen(Color.Magenta)
             {
                 Width = _penWidth
@@ -266,10 +288,10 @@ namespace Assignment
                 Width = 5
             };
             yAxisPen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
-
+            // Clear the render target.
             Graphics graphics = _renderTarget.CreateGraphics();
             graphics.Clear(Color.White);
-
+            // Draw the axes.
             Coordinate2D boxCenterVector = new Coordinate2D(_renderTarget.Width / 2.0f, _renderTarget.Height / 2.0f, 0);
             Coordinate2D xAxisStart = boxCenterVector;
             Coordinate2D yAxisStart = boxCenterVector;
@@ -283,7 +305,14 @@ namespace Assignment
                 _globalDisplacement = new Coordinate2D();
             }
 
-            foreach(Coordinate2D vertex in _vertices)
+            // if there are no vertices, return and skip rendering vertices edges and bezier curve.
+            if (_vertices.Count == 0)
+            {
+                return;
+            }
+
+            // Draw the vertices.
+            foreach (Coordinate2D vertex in _vertices)
             {
                 Pen vertexPen = _selectedVertices.Contains(vertex) ? selectedPen : unselectedPen;
                 Coordinate2D curPoint = (vertex + _globalDisplacement) * _globalZoom;
@@ -291,6 +320,7 @@ namespace Assignment
                 graphics.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
             }
 
+            // Draw the edges.
             _edges.Clear();
             for (int i = 0; i < _vertices.Count - 1; i++)
             {
@@ -303,15 +333,12 @@ namespace Assignment
                 graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
             }
 
+            // Draw the Bezier curve with the selected method.
             bezier = useDeCasteljau ? new Bezier_DeCasteljau(_vertices) : new Bezier_Bernstein(_vertices);
             if (ShowBezierCheck)
             {
-                if (_vertices.Count == 0)
-                {
-                    return;
-                }
                 List<Coordinate2D> curvePoints = new();
-                for (float t = 0; t <= 1; t += 0.01f)
+                for (float t = -1; t <= 2; t += 0.01f)
                 {
                     Coordinate2D curvePoint = bezier.GetCurvePoint(t);
                     curvePoints.Add(curvePoint + _globalDisplacement);
@@ -324,18 +351,17 @@ namespace Assignment
                 }
             }
 
+            // Initialize pens for control points and edges.
+            List<Pen> ctrlEdgePens = new List<Pen>();
+            ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 0), _penWidth));
+            ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 0, 255), _penWidth));
+            ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
+            ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
+
+            // Draw the control points and edges.
             if (ShowControlPointsCheck)
             {
-                if (_vertices.Count == 0)
-                {
-                    return;
-                }
                 bezier.GetCurvePoint(T);
-                List<Pen> ctrlEdgePens = new List<Pen>();
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 0), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 0, 255), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
 
                 List<Coordinate2D> controlPoints = bezier.GetControlPoints(1);
                 List<Edge2D> controlEdges = new();
@@ -373,13 +399,9 @@ namespace Assignment
                 
             }
 
+            // Draw the bernstein polynoms.
             if (ShowBernsteinPolynoms)
             {
-                List<Pen> ctrlEdgePens = new List<Pen>();
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 0), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 0, 255), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(0, 255, 255), _penWidth));
-                ctrlEdgePens.Add(new Pen(Color.FromArgb(255, 128, 0), _penWidth));
 
                 for (int i = 0; i < _vertices.Count; i++)
                 {

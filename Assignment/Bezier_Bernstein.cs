@@ -8,6 +8,7 @@ namespace Assignment
 {
     internal class Bezier_Bernstein : Bezier
     {
+        // List of control points
         private List<Coordinate2D> _controlPoints;
         private List<Coordinate2D> _controlPointsVec;
 
@@ -24,6 +25,7 @@ namespace Assignment
 
         public Bezier_Bernstein(List<Coordinate2D> coordList)
         {
+            // Initialize Bernstein object and set the control points
             ControlPoints = coordList;
             ControlPointsVec = new List<Coordinate2D>();
             foreach(Coordinate2D coord in ControlPoints)
@@ -34,18 +36,21 @@ namespace Assignment
 
         public void AddControlPoint(Coordinate2D controlPoint, int index)
         {
+            // Add a control point at a specific index
             ControlPoints.Insert(index, controlPoint);
             ControlPointsVec.Insert(index, new Coordinate2D(controlPoint, true));
         }
 
         public void AddControlPoint(Coordinate2D controlPoint)
         {
+            // Add a control point at the end of the list
             ControlPoints.Add(controlPoint);
             ControlPointsVec.Add(new Coordinate2D(controlPoint, true));
         }
 
         public void ClearControlPoints()
         {
+            // Clear the list of control points
             ControlPoints = new List<Coordinate2D>();
             ControlPointsVec = new List<Coordinate2D>();
         }
@@ -54,6 +59,7 @@ namespace Assignment
 
         public Coordinate2D GetCurvePoint(float t)
         {
+            // Calculate the Bezier curve point at parameter t
             var bezierCurve = CalculateBezierCurve(ControlPoints);
             //return if controlpoints is empty
             if (ControlPoints.Count == 0)
@@ -74,9 +80,9 @@ namespace Assignment
             return new Coordinate2D(bezierCurve(t).x, bezierCurve(t).y);
         }
 
-        // Rekursive Funktion zum Berechnen des Bernsteinpolynoms B_{i,n}(t)
         public static float BernsteinRecursive(int n, int i, float t)
         {
+            // Rekursive Funktion zum Berechnen des Bernsteinpolynoms B_{i,n}(t)
             if (n == 0)
                 return (i == 0) ? 1.0f : 0.0f;
 
@@ -86,9 +92,9 @@ namespace Assignment
             return a + b;
         }
 
-        // Funktion zum Berechnen der Bernsteinpolynome für einen gegebenen Grad n
         public static List<Func<float, float>> CalculateBernsteinPolynomials(int n)
         {
+            // Funktion zum Berechnen der Bernsteinpolynome für einen gegebenen Grad n
             List<Func<float, float>> polynomials = new List<Func<float, float>>();
 
             for (int i = 0; i <= n; i++)
@@ -100,9 +106,9 @@ namespace Assignment
             return polynomials;
         }
 
-        // Funktion zum Berechnen der Bezierkurve
         public static Func<float, (float x, float y)> CalculateBezierCurve(List<Coordinate2D> controlPoints)
         {
+            // Funktion zum Berechnen der Bezierkurve
             int n = controlPoints.Count - 1;
             var bernsteinPolynomials = CalculateBernsteinPolynomials(n);
 
@@ -121,6 +127,7 @@ namespace Assignment
 
         public List<Coordinate2D> GetControlPoints(int iteration)
         {
+            // Get the control points for the Bezier curve at iteration
             if (iteration > ControlPoints.Count)
                 return null;
 
@@ -196,6 +203,7 @@ namespace Assignment
 
         private List<Coordinate2D> formatOutput(List<Coordinate2D> input)
         {
+            // Format the output of the control points to fit the screen
             float minX = 11223344;
             float maxX = -11223344;
             float minY = 11223344;
