@@ -9,20 +9,20 @@ using System.Windows.Forms;
 
 namespace Assignment
 {
-	public class Bezier_DeCasteljau : Bezier
-	{
+    public class Bezier_DeCasteljau : Bezier
+    {
         public List<Coordinate2D> controlpoints = new();
-		private Bezier_DeCasteljau? nextBezierIteration;
+        private Bezier_DeCasteljau? nextBezierIteration;
 
         public Bezier_DeCasteljau(List<Coordinate2D> coordList)
-		{
-			//set the controlpoints
-			this.controlpoints = coordList;
-			return;
-		}
+        {
+            //set the controlpoints
+            this.controlpoints = coordList;
+            return;
+        }
 
-		public Coordinate2D GetCurvePoint(float t)
-		{
+        public Coordinate2D GetCurvePoint(float t)
+        {
             //return if controlpoints is empty
             if (this.controlpoints.Count == 0)
             {
@@ -31,29 +31,29 @@ namespace Assignment
             //check if t is between -1 and 2
             if (t < -1 || t > 2)
             {
-				throw new ArgumentOutOfRangeException(nameof(t));
-			}
+                throw new ArgumentOutOfRangeException(nameof(t));
+            }
             //if there is only one control point left, return it
             if (this.controlpoints.Count == 1)
-			{
+            {
                 return this.controlpoints[0];
             }
 
-			List<Coordinate2D> nextIterationPoints = new();
+            List<Coordinate2D> nextIterationPoints = new();
 
-			//calculate the next iteration of control points
+            //calculate the next iteration of control points
             for (int i = 0; i < this.controlpoints.Count - 1; i++)
             {
-                Coordinate2D newPoint =
+                Coordinate2D newPoint = new Coordinate2D(
                     ((1 - t) * controlpoints[i].X) + (t * controlpoints[i + 1].X),
-                    ((1 - t) * controlpoints[i].Y) +(t * controlpoints[i + 1].Y), 1);
+                    ((1 - t) * controlpoints[i].Y) + (t * controlpoints[i + 1].Y), 1);
                 nextIterationPoints.Add(newPoint);
             }
 
-			//create a new Bezier object with the next iteration of control points
-			this.nextBezierIteration = new Bezier_DeCasteljau(nextIterationPoints);
-			return this.nextBezierIteration.GetCurvePoint(t);
-		}
+            //create a new Bezier object with the next iteration of control points
+            this.nextBezierIteration = new Bezier_DeCasteljau(nextIterationPoints);
+            return this.nextBezierIteration.GetCurvePoint(t);
+        }
 
         public void Derivation()
         {
@@ -111,16 +111,16 @@ namespace Assignment
 
 
         public override string ToString()
-		{
-			string output = "";
-			this.controlpoints.ForEach(x => output += x.ToString());
-			return output;
+        {
+            string output = "";
+            this.controlpoints.ForEach(x => output += x.ToString());
+            return output;
         }
 
         public List<Coordinate2D> IncreaseControlPoints()
         {
             List<Coordinate2D> controlPointsVec = new List<Coordinate2D>();
-            foreach(Coordinate2D coord in this.controlpoints)
+            foreach (Coordinate2D coord in this.controlpoints)
             {
                 controlPointsVec.Add(new Coordinate2D(coord, true));
             }
