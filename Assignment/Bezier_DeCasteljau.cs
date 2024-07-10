@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 
 namespace Assignment
 {
@@ -43,7 +44,9 @@ namespace Assignment
 			//calculate the next iteration of control points
             for (int i = 0; i < this.controlpoints.Count - 1; i++)
             {
-                Coordinate2D newPoint = ((1 - t) * this.controlpoints[i]) + (t * this.controlpoints[i + 1]);
+                Coordinate2D newPoint = new Coordinate2D(
+                    ((1 - t) * controlpoints[i].X) + (t * controlpoints[i + 1].X),
+                    ((1 - t) * controlpoints[i].Y) + (t * controlpoints[i + 1].Y), 1);
                 nextIterationPoints.Add(newPoint);
             }
 

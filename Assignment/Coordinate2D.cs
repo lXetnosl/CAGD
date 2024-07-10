@@ -91,7 +91,7 @@ namespace Assignment
             Coordinate2D result = new();
             result.x = coord.x * scalar;
             result.y = coord.y * scalar;
-            result.epsilon *= scalar;
+            result.epsilon = coord.epsilon * scalar;
             if (result.epsilon != 0 && result.epsilon != 1)
             {
                 throw new ArgumentException("Scalar multiplication result is not a valid point or vector.");

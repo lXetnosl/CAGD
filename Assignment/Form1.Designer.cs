@@ -35,6 +35,7 @@
             deleteButton = new RadioButton();
             selectButton = new RadioButton();
             panel1 = new Panel();
+            clearButton = new RadioButton();
             groupBox1 = new GroupBox();
             splitInput = new NumericUpDown();
             splitButton = new Button();
@@ -58,7 +59,9 @@
             label5 = new Label();
             checkBox2 = new CheckBox();
             checkBox1 = new CheckBox();
-            clearButton = new RadioButton();
+            panel6 = new Panel();
+            numericUpDown1 = new NumericUpDown();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -73,6 +76,8 @@
             groupBox3.SuspendLayout();
             panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tInput).BeginInit();
+            panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -148,8 +153,21 @@
             panel1.Size = new Size(219, 25);
             panel1.TabIndex = 7;
             // 
+            // clearButton
+            // 
+            clearButton.Appearance = Appearance.Button;
+            clearButton.Location = new Point(168, 1);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new Size(50, 25);
+            clearButton.TabIndex = 6;
+            clearButton.Text = "Clear";
+            clearButton.TextAlign = ContentAlignment.MiddleCenter;
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.CheckedChanged += clearButton_CheckedChanged;
+            // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(panel6);
             groupBox1.Controls.Add(splitInput);
             groupBox1.Controls.Add(splitButton);
             groupBox1.Controls.Add(moveButton);
@@ -157,7 +175,7 @@
             groupBox1.Controls.Add(panel2);
             groupBox1.Location = new Point(586, 42);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(200, 197);
+            groupBox1.Size = new Size(200, 257);
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
             groupBox1.Text = "Edit";
@@ -291,7 +309,7 @@
             // 
             groupBox2.Controls.Add(button2);
             groupBox2.Controls.Add(panel5);
-            groupBox2.Location = new Point(586, 257);
+            groupBox2.Location = new Point(586, 305);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 117);
             groupBox2.TabIndex = 9;
@@ -385,17 +403,33 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += showBezier_CheckedChanged;
             // 
-            // clearButton
+            // panel6
             // 
-            clearButton.Appearance = Appearance.Button;
-            clearButton.Location = new Point(168, 1);
-            clearButton.Name = "clearButton";
-            clearButton.Size = new Size(50, 25);
-            clearButton.TabIndex = 6;
-            clearButton.Text = "Clear";
-            clearButton.TextAlign = ContentAlignment.MiddleCenter;
-            clearButton.UseVisualStyleBackColor = true;
-            clearButton.CheckedChanged += clearButton_CheckedChanged;
+            panel6.Controls.Add(numericUpDown1);
+            panel6.Controls.Add(label2);
+            panel6.Location = new Point(31, 198);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(143, 29);
+            panel6.TabIndex = 12;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.DecimalPlaces = 2;
+            numericUpDown1.Location = new Point(19, 3);
+            numericUpDown1.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            numericUpDown1.Minimum = new decimal(new int[] { 1000, 0, 0, int.MinValue });
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(120, 23);
+            numericUpDown1.TabIndex = 0;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(3, 6);
+            label2.Name = "label2";
+            label2.Size = new Size(19, 15);
+            label2.TabIndex = 2;
+            label2.Text = "w:";
             // 
             // Form1
             // 
@@ -430,6 +464,9 @@
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tInput).EndInit();
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
         }
 
@@ -465,5 +502,8 @@
         private Button bernsteinButton;
         private Button deCastButton;
         private RadioButton clearButton;
+        private Panel panel6;
+        private NumericUpDown numericUpDown1;
+        private Label label2;
     }
 }

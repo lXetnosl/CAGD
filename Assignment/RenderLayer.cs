@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace Assignment
 {
@@ -315,7 +316,7 @@ namespace Assignment
             foreach (Coordinate2D vertex in _vertices)
             {
                 Pen vertexPen = _selectedVertices.Contains(vertex) ? selectedPen : unselectedPen;
-                Coordinate2D curPoint = (vertex + _globalDisplacement) * _globalZoom;
+                Coordinate2D curPoint = new Coordinate2D(vertex.X * _globalZoom, vertex.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                 float transformedRadius = _vertexRadius * _globalZoom;
                 graphics.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
             }
@@ -328,8 +329,8 @@ namespace Assignment
             }
             foreach (Edge2D edge in _edges)
             {
-                Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
-                Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
+                Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                 graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
             }
 
@@ -345,8 +346,8 @@ namespace Assignment
                 }
                 for (int i = 0; i < curvePoints.Count - 1; i++)
                 {
-                    Coordinate2D start = curvePoints[i] * _globalZoom;
-                    Coordinate2D end = curvePoints[i + 1] * _globalZoom;
+                    Coordinate2D start = new Coordinate2D(curvePoints[i].X * _globalZoom, curvePoints[i].Y * _globalZoom, 1);
+                    Coordinate2D end = new Coordinate2D(curvePoints[i + 1].X * _globalZoom, curvePoints[i + 1].Y * _globalZoom, 1);
                     graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
                 }
             }
@@ -371,7 +372,7 @@ namespace Assignment
                     controlPoints = bezier.GetControlPoints(iteration);
                     foreach (Coordinate2D controlPoint in controlPoints)
                     {
-                        Coordinate2D curPoint = (controlPoint + _globalDisplacement) * _globalZoom;
+                        Coordinate2D curPoint = new Coordinate2D(controlPoint.X * _globalZoom, controlPoint.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         float transformedRadius = _vertexRadius * _globalZoom;
                         if (controlPoints.Count == 1)
                         {
@@ -391,8 +392,8 @@ namespace Assignment
                     }
                     foreach (Edge2D edge in controlEdges)
                     {
-                        Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
-                        Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
+                        Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         graphics.DrawLine(ctrlEdgePens[iteration%4], start.X, start.Y, end.X, end.Y);
                     }
                 }
@@ -417,8 +418,8 @@ namespace Assignment
                     }
                     foreach (Edge2D edge in controlEdges)
                     {
-                        Coordinate2D start = (edge.Start + _globalDisplacement) * _globalZoom;
-                        Coordinate2D end = (edge.End + _globalDisplacement) * _globalZoom;
+                        Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         graphics.DrawLine(ctrlEdgePens[i % 4], start.X, start.Y, end.X, end.Y);
                     }
                 }
