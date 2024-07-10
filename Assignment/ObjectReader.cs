@@ -15,6 +15,7 @@ namespace Assignment
 
         public List<Coordinate2D> ReadFile(string path)
         {
+            // Read the file and return a list of 2D coordinates
             StreamReader? reader = null;
             try
             {
