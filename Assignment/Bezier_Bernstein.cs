@@ -142,61 +142,6 @@ namespace Assignment
                 output.Add(new Coordinate2D(t, bernsteinPolynomials[iteration](t)));
 
                 Coordinate2D calcedCoord;
-                //switch (ControlPoints.Count)
-                //{
-                //    case 0:
-                //    case 1:
-                //        return null;
-                //    case 2:
-                //        switch(iteration)
-                //        {
-                //            case 1:
-                //                output.Add(new Coordinate2D(t, 1 - t, 1));
-                //                break;
-                //            case 2:
-                //                output.Add(new Coordinate2D(t, t, 1));
-                //                break;
-                //            default:
-                //                return null;
-                //        }
-                        
-                //        break;
-                //    case 3:
-                //        switch (iteration)
-                //        {
-                //            case 1:
-                //                output.Add(new Coordinate2D(t, (float)Math.Pow(1 - t, 2), 1));
-                //                break;
-                //            case 2:
-                //                output.Add(new Coordinate2D(t, 2 * t * (1 - t), 1));
-                //                break;
-                //            case 3:
-                //                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 2), 1));
-                //                break;
-                //            default:
-                //                return null;
-                //        }
-                //        break;
-                //    case 4:
-                //        switch (iteration)
-                //        {
-                //            case 1:
-                //                output.Add(new Coordinate2D(t, (float)Math.Pow((1 - t), 3), 1));
-                //                break;
-                //            case 2:
-                //                output.Add(new Coordinate2D(t, 3 * t * ((float)Math.Pow(1 - t, 2)), 1));
-                //                break;
-                //            case 3:
-                //                output.Add(new Coordinate2D(t, 3 * ((float)Math.Pow(t, 2)) * (1 - t), 1));
-                //                break;
-                //            case 4:
-                //                output.Add(new Coordinate2D(t, (float)Math.Pow(t, 3), 1));
-                //                break;
-                //            default:
-                //                return null;
-                //        }
-                //        break;
-                //}
             }
             return formatOutput(output);
         }
@@ -233,6 +178,34 @@ namespace Assignment
             }
 
             return output;
+        }
+
+        public List<Coordinate2D> IncreaseControlPoints()
+        {
+            List<Coordinate2D> newControlPoints = new List<Coordinate2D>();
+            int n = ControlPoints.Count - 1;
+
+            // calculation of the new controlpoints
+            newControlPoints.Add(ControlPointsVec[0]);
+            for(float i = 1; i < ControlPointsVec.Count; i++)
+            {
+                float first = (i / (n + 1));
+                float second = (1 - (i / (n + 1)));
+                newControlPoints.Add(ControlPointsVec[(int) i - 1] * first + ControlPointsVec[(int) i] * second);
+            }
+            newControlPoints.Add(ControlPointsVec[ControlPointsVec.Count - 1]);
+
+            // overwriting controlpoint buffers
+            ControlPoints.Clear();
+            ControlPointsVec.Clear();
+
+            for(int i = 0; i < newControlPoints.Count; i++)
+            {
+                ControlPoints.Add(new Coordinate2D(newControlPoints[i], true));
+                ControlPointsVec.Add(newControlPoints[i]);
+            }
+
+            return ControlPoints;
         }
     }
 }
