@@ -192,5 +192,12 @@ namespace Assignment
             renderLayer.ClearVertices();
             renderLayer.Render();
         }
+
+        private void increaseCtrlButton_Click(object sender, EventArgs e)
+        {
+            // increases the used controlpoints by 1
+            renderLayer.increaseControlPoints();
+            renderLayer.Render();
+        }
     }
 }
