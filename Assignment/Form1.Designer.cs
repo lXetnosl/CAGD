@@ -35,6 +35,7 @@
             deleteButton = new RadioButton();
             selectButton = new RadioButton();
             panel1 = new Panel();
+            clearButton = new RadioButton();
             groupBox1 = new GroupBox();
             splitInput = new NumericUpDown();
             splitButton = new Button();
@@ -58,7 +59,7 @@
             label5 = new Label();
             checkBox2 = new CheckBox();
             checkBox1 = new CheckBox();
-            clearButton = new RadioButton();
+            increaseCtrlButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -147,6 +148,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(219, 25);
             panel1.TabIndex = 7;
+            // 
+            // clearButton
+            // 
+            clearButton.Appearance = Appearance.Button;
+            clearButton.Location = new Point(168, 1);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new Size(50, 25);
+            clearButton.TabIndex = 6;
+            clearButton.Text = "Clear";
+            clearButton.TextAlign = ContentAlignment.MiddleCenter;
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.CheckedChanged += clearButton_CheckedChanged;
             // 
             // groupBox1
             // 
@@ -300,6 +313,7 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(increaseCtrlButton);
             groupBox3.Controls.Add(bernsteinButton);
             groupBox3.Controls.Add(deCastButton);
             groupBox3.Controls.Add(panel4);
@@ -385,17 +399,15 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += showBezier_CheckedChanged;
             // 
-            // clearButton
+            // increaseCtrlButton
             // 
-            clearButton.Appearance = Appearance.Button;
-            clearButton.Location = new Point(168, 1);
-            clearButton.Name = "clearButton";
-            clearButton.Size = new Size(50, 25);
-            clearButton.TabIndex = 6;
-            clearButton.Text = "Clear";
-            clearButton.TextAlign = ContentAlignment.MiddleCenter;
-            clearButton.UseVisualStyleBackColor = true;
-            clearButton.CheckedChanged += clearButton_CheckedChanged;
+            increaseCtrlButton.Location = new Point(22, 151);
+            increaseCtrlButton.Name = "increaseCtrlButton";
+            increaseCtrlButton.Size = new Size(143, 23);
+            increaseCtrlButton.TabIndex = 8;
+            increaseCtrlButton.Text = "Increase Control Points";
+            increaseCtrlButton.UseVisualStyleBackColor = true;
+            increaseCtrlButton.Click += increaseCtrlButton_Click;
             // 
             // Form1
             // 
@@ -465,5 +477,6 @@
         private Button bernsteinButton;
         private Button deCastButton;
         private RadioButton clearButton;
+        private Button increaseCtrlButton;
     }
 }

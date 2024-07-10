@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Assignment
 {
@@ -13,7 +14,7 @@ namespace Assignment
         public List<Coordinate2D> controlpoints = new();
 		private Bezier_DeCasteljau? nextBezierIteration;
 
-		public Bezier_DeCasteljau(List<Coordinate2D> coordList)
+        public Bezier_DeCasteljau(List<Coordinate2D> coordList)
 		{
 			//set the controlpoints
 			this.controlpoints = coordList;
@@ -112,7 +113,39 @@ namespace Assignment
 			string output = "";
 			this.controlpoints.ForEach(x => output += x.ToString());
 			return output;
-		}
+        }
 
+        public List<Coordinate2D> IncreaseControlPoints()
+        {
+            List<Coordinate2D> controlPointsVec = new List<Coordinate2D>();
+            foreach(Coordinate2D coord in this.controlpoints)
+            {
+                controlPointsVec.Add(new Coordinate2D(coord, true));
+            }
+
+            List<Coordinate2D> newControlPoints = new List<Coordinate2D>();
+            int n = controlpoints.Count - 1;
+
+            // calculation of the new controlpoints
+            newControlPoints.Add(controlPointsVec[0]);
+            for (float i = 1; i < controlPointsVec.Count; i++)
+            {
+                float first = (i / (n + 1));
+                float second = (1 - (i / (n + 1)));
+                newControlPoints.Add(controlPointsVec[(int)i - 1] * first + controlPointsVec[(int)i] * second);
+            }
+            newControlPoints.Add(controlPointsVec[controlPointsVec.Count - 1]);
+
+            // overwriting controlpoint buffers
+            controlpoints.Clear();
+            controlPointsVec.Clear();
+
+            for (int i = 0; i < newControlPoints.Count; i++)
+            {
+                controlpoints.Add(new Coordinate2D(newControlPoints[i], true));
+            }
+
+            return controlpoints;
+        }
     }
 }

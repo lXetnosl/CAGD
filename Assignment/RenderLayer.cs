@@ -424,5 +424,10 @@ namespace Assignment
                 }
             }
         }
+
+        internal void increaseControlPoints()
+        {
+            _vertices = bezier.IncreaseControlPoints();
+        }
     }
 }
