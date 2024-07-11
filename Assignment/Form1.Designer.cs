@@ -35,7 +35,6 @@
             deleteButton = new RadioButton();
             selectButton = new RadioButton();
             panel1 = new Panel();
-            clearButton = new RadioButton();
             groupBox1 = new GroupBox();
             splitInput = new NumericUpDown();
             splitButton = new Button();
@@ -52,17 +51,19 @@
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            panel7 = new Panel();
+            deCastButton = new RadioButton();
+            bernsteinButton = new RadioButton();
             panel6 = new Panel();
             weightInput = new NumericUpDown();
             label2 = new Label();
             increaseCtrlButton = new Button();
-            bernsteinButton = new Button();
-            deCastButton = new Button();
             panel4 = new Panel();
             tInput = new NumericUpDown();
             label5 = new Label();
             checkBox2 = new CheckBox();
             checkBox1 = new CheckBox();
+            clearButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -75,6 +76,7 @@
             ((System.ComponentModel.ISupportInitialize)zoomInput).BeginInit();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            panel7.SuspendLayout();
             panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)weightInput).BeginInit();
             panel4.SuspendLayout();
@@ -145,26 +147,13 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(clearButton);
             panel1.Controls.Add(deleteButton);
             panel1.Controls.Add(selectButton);
             panel1.Controls.Add(addButton);
             panel1.Location = new Point(30, 19);
             panel1.Name = "panel1";
-            panel1.Size = new Size(219, 25);
+            panel1.Size = new Size(164, 25);
             panel1.TabIndex = 7;
-            // 
-            // clearButton
-            // 
-            clearButton.Appearance = Appearance.Button;
-            clearButton.Location = new Point(168, 1);
-            clearButton.Name = "clearButton";
-            clearButton.Size = new Size(50, 25);
-            clearButton.TabIndex = 6;
-            clearButton.Text = "Clear";
-            clearButton.TextAlign = ContentAlignment.MiddleCenter;
-            clearButton.UseVisualStyleBackColor = true;
-            clearButton.CheckedChanged += clearButton_CheckedChanged;
             // 
             // groupBox1
             // 
@@ -318,10 +307,9 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(panel7);
             groupBox3.Controls.Add(panel6);
             groupBox3.Controls.Add(increaseCtrlButton);
-            groupBox3.Controls.Add(bernsteinButton);
-            groupBox3.Controls.Add(deCastButton);
             groupBox3.Controls.Add(panel4);
             groupBox3.Controls.Add(checkBox2);
             groupBox3.Controls.Add(checkBox1);
@@ -331,6 +319,41 @@
             groupBox3.TabIndex = 12;
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
+            // 
+            // panel7
+            // 
+            panel7.Controls.Add(deCastButton);
+            panel7.Controls.Add(bernsteinButton);
+            panel7.Location = new Point(22, 34);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(160, 25);
+            panel7.TabIndex = 10;
+            // 
+            // deCastButton
+            // 
+            deCastButton.Appearance = Appearance.Button;
+            deCastButton.Checked = true;
+            deCastButton.Location = new Point(0, 0);
+            deCastButton.Name = "deCastButton";
+            deCastButton.Size = new Size(80, 25);
+            deCastButton.TabIndex = 5;
+            deCastButton.TabStop = true;
+            deCastButton.Text = "deCasteljau";
+            deCastButton.TextAlign = ContentAlignment.MiddleCenter;
+            deCastButton.UseVisualStyleBackColor = true;
+            deCastButton.CheckedChanged += deCastButton_CheckedChanged;
+            // 
+            // bernsteinButton
+            // 
+            bernsteinButton.Appearance = Appearance.Button;
+            bernsteinButton.Location = new Point(80, 0);
+            bernsteinButton.Name = "bernsteinButton";
+            bernsteinButton.Size = new Size(80, 25);
+            bernsteinButton.TabIndex = 3;
+            bernsteinButton.Text = "Bernstein";
+            bernsteinButton.TextAlign = ContentAlignment.MiddleCenter;
+            bernsteinButton.UseVisualStyleBackColor = true;
+            bernsteinButton.CheckedChanged += bernsteinButton_CheckedChanged;
             // 
             // panel6
             // 
@@ -354,7 +377,6 @@
             weightInput.TabIndex = 12;
             weightInput.Value = new decimal(new int[] { 1, 0, 0, 0 });
             weightInput.ValueChanged += weightInput_ValueChanged;
-            weightInput.EnabledChanged += weightInput_EnabledChanged;
             // 
             // label2
             // 
@@ -374,26 +396,6 @@
             increaseCtrlButton.Text = "Increase Control Points";
             increaseCtrlButton.UseVisualStyleBackColor = true;
             increaseCtrlButton.Click += increaseCtrlButton_Click;
-            // 
-            // bernsteinButton
-            // 
-            bernsteinButton.Location = new Point(101, 22);
-            bernsteinButton.Name = "bernsteinButton";
-            bernsteinButton.Size = new Size(82, 23);
-            bernsteinButton.TabIndex = 7;
-            bernsteinButton.Text = "Bernstein";
-            bernsteinButton.UseVisualStyleBackColor = true;
-            bernsteinButton.Click += bernsteinButton_Click;
-            // 
-            // deCastButton
-            // 
-            deCastButton.Location = new Point(21, 22);
-            deCastButton.Name = "deCastButton";
-            deCastButton.Size = new Size(82, 23);
-            deCastButton.TabIndex = 6;
-            deCastButton.Text = "De Casteljau";
-            deCastButton.UseVisualStyleBackColor = true;
-            deCastButton.Click += deCastButton_Click;
             // 
             // panel4
             // 
@@ -448,11 +450,22 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += showBezier_CheckedChanged;
             // 
+            // clearButton
+            // 
+            clearButton.Location = new Point(200, 19);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new Size(50, 25);
+            clearButton.TabIndex = 13;
+            clearButton.Text = "Clear";
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.Click += clearButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1001, 450);
+            Controls.Add(clearButton);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
@@ -460,7 +473,7 @@
             Controls.Add(pictureBox1);
             Controls.Add(button1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "CAGD";
             Paint += Form1_Paint;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
@@ -478,6 +491,7 @@
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            panel7.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)weightInput).EndInit();
@@ -516,12 +530,13 @@
         private Panel panel4;
         private Label label5;
         private NumericUpDown tInput;
-        private Button bernsteinButton;
-        private Button deCastButton;
-        private RadioButton clearButton;
+        private RadioButton bernsteinButton;
+        private RadioButton deCastButton;
         private Button increaseCtrlButton;
         private Panel panel6;
         private NumericUpDown weightInput;
         private Label label2;
+        private Button clearButton;
+        private Panel panel7;
     }
 }

@@ -66,7 +66,7 @@ namespace Assignment
         {
             weightInput.Enabled = renderLayer.SelectedCount > 0;
 
-            switch(renderLayer.SelectedCount)
+            switch (renderLayer.SelectedCount)
             {
                 case 0:
                     weightInput.Value = 1;
@@ -185,60 +185,11 @@ namespace Assignment
             renderLayer.Render();
         }
 
-        private void deCastButton_Click(object sender, EventArgs e)
-        {
-            // switch to de casteljau mode
-            checkBox1.Checked = false;
-            checkBox2.Checked = false;
-            renderLayer.useDeCasteljau = true;
-            renderLayer.ShowBezierCheck = false;
-            renderLayer.ShowBernsteinPolynoms = false;
-            deCastButton.BackColor = Color.AliceBlue;
-            bernsteinButton.BackColor = SystemColors.Control;
-            checkBox2.Text = "Show Control Points";
-            renderLayer.Render();
-        }
-
-        private void bernsteinButton_Click(object sender, EventArgs e)
-        {
-            // switch to bernstein polynoms mode
-            checkBox1.Checked = false;
-            checkBox2.Checked = false;
-            renderLayer.useDeCasteljau = false;
-            renderLayer.ShowBezierCheck = false;
-            renderLayer.ShowBernsteinPolynoms = false;
-            bernsteinButton.BackColor = Color.AliceBlue;
-            deCastButton.BackColor = SystemColors.Control;
-            checkBox2.Text = "Show Polynoms";
-            renderLayer.Render();
-        }
-
-        private void clearButton_CheckedChanged(object sender, EventArgs e)
-        {
-            // clear all vertices on screen
-            renderLayer.ClearVertices();
-            renderLayer.Render();
-        }
-
         private void increaseCtrlButton_Click(object sender, EventArgs e)
         {
             // increases the used controlpoints by 1
             renderLayer.increaseControlPoints();
             renderLayer.Render();
-        }
-
-        private void weightInput_EnabledChanged(object sender, EventArgs e)
-        {
-            if (!weightInput.Enabled)
-            {
-                weightInput.Value = 1;
-                return;
-            }
-            if (renderLayer.SelectedCount != 1)
-            {
-                return;
-            }
-            weightInput.Value = Convert.ToDecimal(renderLayer.SelectedVertices[0].W);
         }
 
         private void weightInput_ValueChanged(object sender, EventArgs e)
@@ -251,6 +202,47 @@ namespace Assignment
             {
                 vertex.W = Convert.ToSingle(weightInput.Value);
             }
+            renderLayer.Render();
+        }
+
+        private void clearButton_Click(object sender, EventArgs e)
+        {
+            // clear all vertices on screen
+            renderLayer.ClearVertices();
+            renderLayer.Render();
+        }
+
+        private void deCastButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!deCastButton.Checked)
+            {
+                return;
+            }
+
+            // switch to de casteljau mode
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            renderLayer.useDeCasteljau = true;
+            renderLayer.ShowBezierCheck = false;
+            renderLayer.ShowBernsteinPolynoms = false;
+            checkBox2.Text = "Show Control Points";
+            renderLayer.Render();
+        }
+
+        private void bernsteinButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!bernsteinButton.Checked)
+            {
+                return;
+            }
+
+            // switch to bernstein polynoms mode
+            checkBox1.Checked = false;
+            checkBox2.Checked = false;
+            renderLayer.useDeCasteljau = false;
+            renderLayer.ShowBezierCheck = false;
+            renderLayer.ShowBernsteinPolynoms = false;
+            checkBox2.Text = "Show Polynoms";
             renderLayer.Render();
         }
     }
