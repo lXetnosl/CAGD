@@ -64,6 +64,11 @@ namespace Assignment
             get { return _selectedVertices.Count; }
         }
 
+        internal List<Coordinate2D> SelectedVertices
+        {
+            get { return _selectedVertices; }
+        }
+
         internal RenderLayer(PictureBox renderTarget)
         {
             // Initialize the render layer.

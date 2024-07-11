@@ -47,6 +47,7 @@ namespace Assignment
             if (selectButton.Checked)
             {
                 renderLayer.GetVertexAt(new Coordinate2D(mouseArgs.X, mouseArgs.Y, 1), true);
+                OnSelectionChanged();
             }
             else if (addButton.Checked)
             {
@@ -59,6 +60,32 @@ namespace Assignment
             }
 
             renderLayer.Render();
+        }
+
+        private void OnSelectionChanged()
+        {
+            weightInput.Enabled = renderLayer.SelectedCount > 0;
+
+            switch(renderLayer.SelectedCount)
+            {
+                case 0:
+                    weightInput.Value = 1;
+                    weightInput.Controls[0].Enabled = true;
+                    weightInput.InterceptArrowKeys = true;
+                    weightInput.Text = weightInput.Value.ToString();
+                    break;
+                case 1:
+                    weightInput.Value = Convert.ToDecimal(renderLayer.SelectedVertices[0].W);
+                    weightInput.Controls[0].Enabled = true;
+                    weightInput.InterceptArrowKeys = true;
+                    weightInput.Text = weightInput.Value.ToString();
+                    break;
+                default:
+                    weightInput.Controls[0].Enabled = false;
+                    weightInput.InterceptArrowKeys = false;
+                    weightInput.Text = "";
+                    break;
+            }
         }
 
         private void deleteButton_CheckedChanged(object sender, EventArgs e)
@@ -197,6 +224,33 @@ namespace Assignment
         {
             // increases the used controlpoints by 1
             renderLayer.increaseControlPoints();
+            renderLayer.Render();
+        }
+
+        private void weightInput_EnabledChanged(object sender, EventArgs e)
+        {
+            if (!weightInput.Enabled)
+            {
+                weightInput.Value = 1;
+                return;
+            }
+            if (renderLayer.SelectedCount != 1)
+            {
+                return;
+            }
+            weightInput.Value = Convert.ToDecimal(renderLayer.SelectedVertices[0].W);
+        }
+
+        private void weightInput_ValueChanged(object sender, EventArgs e)
+        {
+            if (renderLayer.SelectedCount <= 0)
+            {
+                return;
+            }
+            foreach (var vertex in renderLayer.SelectedVertices)
+            {
+                vertex.W = Convert.ToSingle(weightInput.Value);
+            }
             renderLayer.Render();
         }
     }

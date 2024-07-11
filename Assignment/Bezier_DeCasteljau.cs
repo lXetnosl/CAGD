@@ -21,7 +21,7 @@ namespace Assignment
             return;
         }
 
-        public Coordinate2D GetCurvePoint(float t)
+        public Coordinate2D GetCurvePoint(float t, bool isFirstIteration = true)
         {
             //return if controlpoints is empty
             if (this.controlpoints.Count == 0)
@@ -36,23 +36,43 @@ namespace Assignment
             //if there is only one control point left, return it
             if (this.controlpoints.Count == 1)
             {
-                return this.controlpoints[0];
+                Coordinate2D result = controlpoints[0];
+                result.X /= result.W;
+                result.Y /= result.W;
+                result.W = 1;
+                return result;
+            }
+
+            List<Coordinate2D> weightedControlPoints = new();
+
+            if (isFirstIteration)
+            {
+                foreach (Coordinate2D point in controlpoints)
+                {
+                    weightedControlPoints.Add(new Coordinate2D(point.X * point.W, point.Y * point.W, 1, point.W));
+                }
+            }
+            else
+            {
+                weightedControlPoints = controlpoints;
             }
 
             List<Coordinate2D> nextIterationPoints = new();
 
             //calculate the next iteration of control points
-            for (int i = 0; i < this.controlpoints.Count - 1; i++)
+            for (int i = 0; i < weightedControlPoints.Count - 1; i++)
             {
                 Coordinate2D newPoint = new Coordinate2D(
-                    ((1 - t) * controlpoints[i].X) + (t * controlpoints[i + 1].X),
-                    ((1 - t) * controlpoints[i].Y) + (t * controlpoints[i + 1].Y), 1);
+                    ((1 - t) * weightedControlPoints[i].X) + (t * weightedControlPoints[i + 1].X),
+                    ((1 - t) * weightedControlPoints[i].Y) + (t * weightedControlPoints[i + 1].Y), 
+                    1,
+                    ((1 - t) * weightedControlPoints[i].W) + (t * weightedControlPoints[i + 1].W));
                 nextIterationPoints.Add(newPoint);
             }
 
             //create a new Bezier object with the next iteration of control points
             this.nextBezierIteration = new Bezier_DeCasteljau(nextIterationPoints);
-            return this.nextBezierIteration.GetCurvePoint(t);
+            return this.nextBezierIteration.GetCurvePoint(t, false);
         }
 
         public void Derivation()

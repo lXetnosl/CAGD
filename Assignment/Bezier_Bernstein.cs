@@ -57,7 +57,7 @@ namespace Assignment
 
 
 
-        public Coordinate2D GetCurvePoint(float t)
+        public Coordinate2D GetCurvePoint(float t, bool isFirstIteration = true)
         {
             // Calculate the Bezier curve point at parameter t
             var bezierCurve = CalculateBezierCurve(ControlPoints);
