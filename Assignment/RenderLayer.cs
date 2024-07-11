@@ -25,6 +25,7 @@ namespace Assignment
         private List<Coordinate2D> _vertices;
         private List<Coordinate2D> _selectedVertices;
         private List<Edge2D> _edges;
+        private List<List<Coordinate2D>> _splittedPoints;
 
         // Bezier curve variables and flags.
         internal bool useDeCasteljau = true;
@@ -140,6 +141,7 @@ namespace Assignment
             // Delete all vertices.
             _vertices.Clear();
             _selectedVertices.Clear();
+            _splittedPoints.Clear();
         }
 
         internal void MoveSelected(Coordinate2D moveVector)
@@ -429,11 +431,30 @@ namespace Assignment
                     }
                 }
             }
+
+            // Draw the bernstein polynoms.
+            if (_splittedPoints != null)
+            {
+                for(int i = 0; i < _splittedPoints.Count; i++)
+                {
+                    foreach (Coordinate2D controlPoint in _splittedPoints[i])
+                    {
+                        Coordinate2D curPoint = new Coordinate2D(controlPoint.X * _globalZoom, controlPoint.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        float transformedRadius = _vertexRadius * _globalZoom;
+                        graphics.DrawEllipse(ctrlEdgePens[i], curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                    }
+                }
+            }
         }
 
         internal void increaseControlPoints()
         {
             _vertices = bezier.IncreaseControlPoints();
+        }
+
+        internal void SplitCurve(List<float> ts)
+        {
+            _splittedPoints = bezier.SplitCurve(ts);
         }
     }
 }

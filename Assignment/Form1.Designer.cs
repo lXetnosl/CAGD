@@ -51,6 +51,10 @@
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            panel8 = new Panel();
+            splittingTextBox = new TextBox();
+            label6 = new Label();
+            splittingButton = new Button();
             panel7 = new Panel();
             deCastButton = new RadioButton();
             bernsteinButton = new RadioButton();
@@ -76,6 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)zoomInput).BeginInit();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            panel8.SuspendLayout();
             panel7.SuspendLayout();
             panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)weightInput).BeginInit();
@@ -307,6 +312,8 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(panel8);
+            groupBox3.Controls.Add(splittingButton);
             groupBox3.Controls.Add(panel7);
             groupBox3.Controls.Add(panel6);
             groupBox3.Controls.Add(increaseCtrlButton);
@@ -319,6 +326,42 @@
             groupBox3.TabIndex = 12;
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
+            // 
+            // panel8
+            // 
+            panel8.Controls.Add(splittingTextBox);
+            panel8.Controls.Add(label6);
+            panel8.Location = new Point(6, 280);
+            panel8.Name = "panel8";
+            panel8.Size = new Size(150, 29);
+            panel8.TabIndex = 13;
+            // 
+            // splittingTextBox
+            // 
+            splittingTextBox.Location = new Point(30, 3);
+            splittingTextBox.Name = "splittingTextBox";
+            splittingTextBox.Size = new Size(116, 23);
+            splittingTextBox.TabIndex = 3;
+            splittingTextBox.Text = "0,3;0,6";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(4, 6);
+            label6.Name = "label6";
+            label6.Size = new Size(20, 15);
+            label6.TabIndex = 2;
+            label6.Text = "Ts:";
+            // 
+            // splittingButton
+            // 
+            splittingButton.Location = new Point(158, 280);
+            splittingButton.Name = "splittingButton";
+            splittingButton.Size = new Size(39, 27);
+            splittingButton.TabIndex = 11;
+            splittingButton.Text = "Split";
+            splittingButton.UseVisualStyleBackColor = true;
+            splittingButton.Click += splittingButton_Click;
             // 
             // panel7
             // 
@@ -491,6 +534,8 @@
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            panel8.ResumeLayout(false);
+            panel8.PerformLayout();
             panel7.ResumeLayout(false);
             panel6.ResumeLayout(false);
             panel6.PerformLayout();
@@ -538,5 +583,9 @@
         private Label label2;
         private Button clearButton;
         private Panel panel7;
+        private Button splittingButton;
+        private Panel panel8;
+        private TextBox splittingTextBox;
+        private Label label6;
     }
 }

@@ -245,5 +245,18 @@ namespace Assignment
             checkBox2.Text = "Show Polynoms";
             renderLayer.Render();
         }
+
+        private void splittingButton_Click(object sender, EventArgs e)
+        {
+            string[] tsAsString = splittingTextBox.Text.Split(';');
+            List<float> ts = new List<float>();
+            foreach (string tsStr in tsAsString)
+            {
+                ts.Add(float.Parse(tsStr));
+            }
+
+            renderLayer.SplitCurve(ts);
+            renderLayer.Render();
+        }
     }
 }

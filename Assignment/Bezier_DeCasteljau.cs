@@ -169,5 +169,10 @@ namespace Assignment
 
             return controlpoints;
         }
+
+        public List<List<Coordinate2D>> SplitCurve(List<float> t)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

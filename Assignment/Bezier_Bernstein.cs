@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -207,6 +208,80 @@ namespace Assignment
             }
 
             return ControlPoints;
+        }
+
+        public List<List<Coordinate2D>> SplitCurve(List<float> ts)
+        {
+            List<List<Coordinate2D>> output = new();
+            List<float> tmpTs;
+            for (int i = 0; i < ts.Count; i++)
+            {
+                float lowerEnd = i == 0 ? 0f : ts[i - 1];
+                float upperEnd = ts[i];
+
+                output.Add(new List<Coordinate2D>());
+
+                for(int e = 0; e <= ControlPointsVec.Count - 1; e++)
+                {
+                    tmpTs = new List<float>();
+                    for (int j = 0; j < e; j++) tmpTs.Add(lowerEnd);
+                    for(int j = ControlPointsVec.Count - 1; j > e; j--) tmpTs.Add(upperEnd);
+                    output[i].Add(CalcPoint(tmpTs));
+                }
+            }
+
+            output.Add(new List<Coordinate2D>());
+
+            for (int e = 0; e <= ControlPointsVec.Count - 1; e++)
+            {
+                tmpTs = new List<float>();
+                for (int j = 0; j < e; j++) tmpTs.Add(ts[ts.Count - 1]);
+                for (int j = ControlPointsVec.Count - 1; j > e; j--) tmpTs.Add(1f);
+                output[ts.Count].Add(CalcPoint(tmpTs));
+            }
+
+            //output.Add(new List<Coordinate2D>());
+
+            //tmpTs = new List<float> { ts[ts.Count - 1], ts[ts.Count - 1], ts[ts.Count - 1] };
+            //output[ts.Count].Add(CalcPoint(tmpTs));
+            //tmpTs = new List<float> { ts[ts.Count - 1], ts[ts.Count - 1], 1f};
+            //output[ts.Count].Add(CalcPoint(tmpTs));
+            //tmpTs = new List<float> { ts[ts.Count - 1], 1f, 1f};
+            //output[ts.Count].Add(CalcPoint(tmpTs));
+            //tmpTs = new List<float> { 1f, 1f, 1f };
+            //output[ts.Count].Add(CalcPoint(tmpTs));
+
+
+
+            return output;
+
+        }
+
+        private Coordinate2D CalcPoint(List<float> ts)
+        {
+            int zeroes = ts.RemoveAll(t => t == 0f);
+            int ones = ts.RemoveAll(t => t == 1f);
+
+            if (ts.Count == 0)
+                return ControlPointsVec[ones];
+
+            float currT = ts[0];
+            ts.RemoveAt(0);
+
+            for (int i = 0; i < zeroes; i++) ts.Add(0);
+            for(int i = 0; i < ones; i++) ts.Add(1);
+
+            List<float> param1 = new();
+            param1.AddRange(ts);
+            param1.Add(0f);
+
+            List<float> param2 = new();
+            param2.AddRange(ts);
+            param2.Add(1f);
+
+
+            return (1 - currT) * CalcPoint(param1)  +  currT * CalcPoint(param2);
+
         }
     }
 }
