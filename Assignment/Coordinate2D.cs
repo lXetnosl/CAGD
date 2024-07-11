@@ -74,9 +74,10 @@ namespace Assignment
         public Coordinate2D(Coordinate2D oldPoint, bool switchType)
         {
             // Copy constructor for Coordinate2D
-            x = oldPoint.X;
-            y = oldPoint.Y;
+            x = oldPoint.x;
+            y = oldPoint.y;
             epsilon = switchType ? (oldPoint.epsilon == 1 ? 0 : 1) : oldPoint.epsilon;
+            w = oldPoint.w;
         }
 
         public static Coordinate2D operator +(Coordinate2D left, Coordinate2D right)
