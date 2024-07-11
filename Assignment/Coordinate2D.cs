@@ -10,7 +10,7 @@ namespace Assignment
     public class Coordinate2D
     {
         // Class for 2D coordinates
-        private float x, y, epsilon;
+        private float x, y, epsilon, w;
 
         public float X
         {
@@ -23,6 +23,27 @@ namespace Assignment
             get { return y; }
             set { y = value; }
         }
+
+        public float W
+        {
+            get 
+            {
+                if (!Type.Equals("Point"))
+                {
+                    throw new ArgumentException("Trying to access weight of vector or invalid coordinate.");
+                }
+                return w; 
+            }
+            set 
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("Weight should not be zero or negative.");
+                }
+                w = value; 
+            }
+        }
+
 
         public string Type
         {
@@ -40,13 +61,14 @@ namespace Assignment
             }
         }
 
-        public Coordinate2D(float x = 0, float y = 0, int epsilon = 0)
+        public Coordinate2D(float x = 0, float y = 0, int epsilon = 0, float w = 1)
         {
             // Initialize a 2D coordinate with x and y values and epsilon value
             // epsilon is 0 for vectors and 1 for points
             this.x = x;
             this.y = y;
             this.epsilon = epsilon;
+            this.w = w;
         }
 
         public Coordinate2D(Coordinate2D oldPoint, bool switchType)

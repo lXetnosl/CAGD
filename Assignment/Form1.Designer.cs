@@ -52,6 +52,10 @@
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            panel6 = new Panel();
+            weightInput = new NumericUpDown();
+            label2 = new Label();
+            increaseCtrlButton = new Button();
             bernsteinButton = new Button();
             deCastButton = new Button();
             panel4 = new Panel();
@@ -59,7 +63,6 @@
             label5 = new Label();
             checkBox2 = new CheckBox();
             checkBox1 = new CheckBox();
-            increaseCtrlButton = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -72,6 +75,8 @@
             ((System.ComponentModel.ISupportInitialize)zoomInput).BeginInit();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)weightInput).BeginInit();
             panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tInput).BeginInit();
             SuspendLayout();
@@ -313,6 +318,7 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(panel6);
             groupBox3.Controls.Add(increaseCtrlButton);
             groupBox3.Controls.Add(bernsteinButton);
             groupBox3.Controls.Add(deCastButton);
@@ -321,10 +327,53 @@
             groupBox3.Controls.Add(checkBox1);
             groupBox3.Location = new Point(792, 42);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(200, 197);
+            groupBox3.Size = new Size(200, 332);
             groupBox3.TabIndex = 12;
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
+            // 
+            // panel6
+            // 
+            panel6.Controls.Add(weightInput);
+            panel6.Controls.Add(label2);
+            panel6.Location = new Point(22, 180);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(143, 29);
+            panel6.TabIndex = 9;
+            // 
+            // weightInput
+            // 
+            weightInput.DecimalPlaces = 2;
+            weightInput.Enabled = false;
+            weightInput.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            weightInput.Location = new Point(24, 3);
+            weightInput.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            weightInput.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
+            weightInput.Name = "weightInput";
+            weightInput.Size = new Size(116, 23);
+            weightInput.TabIndex = 12;
+            weightInput.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            weightInput.ValueChanged += weightInput_ValueChanged;
+            weightInput.EnabledChanged += weightInput_EnabledChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(4, 6);
+            label2.Name = "label2";
+            label2.Size = new Size(19, 15);
+            label2.TabIndex = 2;
+            label2.Text = "w:";
+            // 
+            // increaseCtrlButton
+            // 
+            increaseCtrlButton.Location = new Point(22, 151);
+            increaseCtrlButton.Name = "increaseCtrlButton";
+            increaseCtrlButton.Size = new Size(143, 23);
+            increaseCtrlButton.TabIndex = 8;
+            increaseCtrlButton.Text = "Increase Control Points";
+            increaseCtrlButton.UseVisualStyleBackColor = true;
+            increaseCtrlButton.Click += increaseCtrlButton_Click;
             // 
             // bernsteinButton
             // 
@@ -399,16 +448,6 @@
             checkBox1.UseVisualStyleBackColor = true;
             checkBox1.CheckedChanged += showBezier_CheckedChanged;
             // 
-            // increaseCtrlButton
-            // 
-            increaseCtrlButton.Location = new Point(22, 151);
-            increaseCtrlButton.Name = "increaseCtrlButton";
-            increaseCtrlButton.Size = new Size(143, 23);
-            increaseCtrlButton.TabIndex = 8;
-            increaseCtrlButton.Text = "Increase Control Points";
-            increaseCtrlButton.UseVisualStyleBackColor = true;
-            increaseCtrlButton.Click += increaseCtrlButton_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -439,6 +478,9 @@
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)weightInput).EndInit();
             panel4.ResumeLayout(false);
             panel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tInput).EndInit();
@@ -478,5 +520,8 @@
         private Button deCastButton;
         private RadioButton clearButton;
         private Button increaseCtrlButton;
+        private Panel panel6;
+        private NumericUpDown weightInput;
+        private Label label2;
     }
 }

@@ -57,7 +57,7 @@ namespace Assignment
 
 
 
-        public Coordinate2D GetCurvePoint(float t)
+        public Coordinate2D GetCurvePoint(float t, bool isFirstIteration = true)
         {
             // Calculate the Bezier curve point at parameter t
             var bezierCurve = CalculateBezierCurve(ControlPoints);
@@ -114,14 +114,15 @@ namespace Assignment
 
             return t =>
             {
-                float x = 0, y = 0;
+                float x = 0, y = 0, w = 0;
                 for (int i = 0; i <= n; i++)
                 {
                     float b = bernsteinPolynomials[i](t);
-                    x += b * controlPoints[i].X;
-                    y += b * controlPoints[i].Y;
+                    x += b * controlPoints[i].X * controlPoints[i].W;
+                    y += b * controlPoints[i].Y * controlPoints[i].W;
+                    w += b * controlPoints[i].W;
                 }
-                return (x, y);
+                return (x / w, y / w);
             };
         }
 

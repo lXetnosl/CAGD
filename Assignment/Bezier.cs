@@ -10,7 +10,7 @@ namespace Assignment
     internal interface Bezier
     {
 
-        Coordinate2D GetCurvePoint(float t);
+        Coordinate2D GetCurvePoint(float t, bool isFirstIteration = true);
 
         List<Coordinate2D> GetControlPoints(int iteration);
 
