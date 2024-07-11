@@ -32,6 +32,8 @@ namespace Assignment
         internal bool ShowBezierCheck = false;
         internal bool ShowControlPointsCheck = false;
         internal bool ShowBernsteinPolynoms = false;
+        internal bool ShowDerivation = false;
+
         private Bezier bezier;
         internal float T = 0.5f;
         internal float VertexRadius
@@ -355,7 +357,11 @@ namespace Assignment
                 {
                     Coordinate2D start = new Coordinate2D(curvePoints[i].X * _globalZoom, curvePoints[i].Y * _globalZoom, 1);
                     Coordinate2D end = new Coordinate2D(curvePoints[i + 1].X * _globalZoom, curvePoints[i + 1].Y * _globalZoom, 1);
-                    graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+                    // catch overflow error when drawing bezier curve
+                    if (Math.Abs(start.X) < 1000000 && Math.Abs(start.Y) < 1000000 && Math.Abs(end.X) < 1000000 && Math.Abs(end.Y) < 1000000)
+                    {
+                        graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+                    }
                 }
             }
 
@@ -404,13 +410,11 @@ namespace Assignment
                         graphics.DrawLine(ctrlEdgePens[iteration%4], start.X, start.Y, end.X, end.Y);
                     }
                 }
-                
             }
 
             // Draw the bernstein polynoms.
             if (ShowBernsteinPolynoms)
             {
-
                 for (int i = 0; i < _vertices.Count; i++)
                 {
                     List<Coordinate2D> controlPoints = bezier.GetControlPoints(i);

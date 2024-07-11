@@ -220,12 +220,12 @@ namespace Assignment
             }
 
             // switch to de casteljau mode
-            checkBox1.Checked = false;
-            checkBox2.Checked = false;
+            BezierCheckBox.Checked = false;
+            controlPointsCheckBox.Checked = false;
             renderLayer.useDeCasteljau = true;
             renderLayer.ShowBezierCheck = false;
             renderLayer.ShowBernsteinPolynoms = false;
-            checkBox2.Text = "Show Control Points";
+            controlPointsCheckBox.Text = "Show Control Points";
             renderLayer.Render();
         }
 
@@ -237,12 +237,19 @@ namespace Assignment
             }
 
             // switch to bernstein polynoms mode
-            checkBox1.Checked = false;
-            checkBox2.Checked = false;
+            BezierCheckBox.Checked = false;
+            controlPointsCheckBox.Checked = false;
             renderLayer.useDeCasteljau = false;
             renderLayer.ShowBezierCheck = false;
             renderLayer.ShowBernsteinPolynoms = false;
-            checkBox2.Text = "Show Polynoms";
+            controlPointsCheckBox.Text = "Show Polynoms";
+            renderLayer.Render();
+        }
+
+        private void showDerive_CheckedChanged(object sender, EventArgs e)
+        {
+            // change state of showDerive
+            renderLayer.ShowDerivation = !renderLayer.ShowDerivation;
             renderLayer.Render();
         }
 

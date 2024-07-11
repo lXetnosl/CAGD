@@ -75,28 +75,6 @@ namespace Assignment
             return this.nextBezierIteration.GetCurvePoint(t, false);
         }
 
-        public void Derivation()
-        {
-            //return if controlpoints is empty
-            if (this.controlpoints.Count == 0)
-            {
-                throw new InvalidOperationException("No control points");
-            }
-            //if there is only one control point left, return it
-            if (this.controlpoints.Count == 1)
-            {
-                return;
-            }
-            //if there is no next iteration, throw an exception
-            if (this.nextBezierIteration == null)
-            {
-                throw new InvalidOperationException("No next iteration");
-            }
-            //calculate the derivation of the next iteration
-            this.nextBezierIteration.Derivation();
-            return;
-        }
-
         public List<Coordinate2D> GetControlPoints(int iteration)
         {
             //return if controlpoints is empty

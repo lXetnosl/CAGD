@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            button1 = new Button();
+            browseFilesButton = new Button();
             pictureBox1 = new PictureBox();
             openFileDialog1 = new OpenFileDialog();
             addButton = new RadioButton();
             deleteButton = new RadioButton();
             selectButton = new RadioButton();
             panel1 = new Panel();
+            clearButton = new Button();
             groupBox1 = new GroupBox();
             splitInput = new NumericUpDown();
             splitButton = new Button();
@@ -45,12 +46,13 @@
             panel2 = new Panel();
             moveX = new NumericUpDown();
             label1 = new Label();
-            button2 = new Button();
+            focusButton = new Button();
             panel5 = new Panel();
             zoomInput = new NumericUpDown();
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            showDerive = new CheckBox();
             panel8 = new Panel();
             splittingTextBox = new TextBox();
             label6 = new Label();
@@ -65,9 +67,8 @@
             panel4 = new Panel();
             tInput = new NumericUpDown();
             label5 = new Label();
-            checkBox2 = new CheckBox();
-            checkBox1 = new CheckBox();
-            clearButton = new Button();
+            controlPointsCheckBox = new CheckBox();
+            BezierCheckBox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -88,22 +89,22 @@
             ((System.ComponentModel.ISupportInitialize)tInput).BeginInit();
             SuspendLayout();
             // 
-            // button1
+            // browseFilesButton
             // 
-            button1.Location = new Point(477, 20);
-            button1.Name = "button1";
-            button1.Size = new Size(92, 23);
-            button1.TabIndex = 1;
-            button1.Text = "Browse Files...";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            browseFilesButton.Location = new Point(224, 1);
+            browseFilesButton.Name = "browseFilesButton";
+            browseFilesButton.Size = new Size(92, 23);
+            browseFilesButton.TabIndex = 1;
+            browseFilesButton.Text = "Browse Files...";
+            browseFilesButton.UseVisualStyleBackColor = true;
+            browseFilesButton.Click += button1_Click;
             // 
             // pictureBox1
             // 
             pictureBox1.BorderStyle = BorderStyle.FixedSingle;
-            pictureBox1.Location = new Point(30, 50);
+            pictureBox1.Location = new Point(256, 50);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(539, 377);
+            pictureBox1.Size = new Size(1399, 693);
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
             pictureBox1.Click += pictureBox1_Click;
@@ -152,13 +153,25 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(clearButton);
             panel1.Controls.Add(deleteButton);
             panel1.Controls.Add(selectButton);
             panel1.Controls.Add(addButton);
+            panel1.Controls.Add(browseFilesButton);
             panel1.Location = new Point(30, 19);
             panel1.Name = "panel1";
-            panel1.Size = new Size(164, 25);
+            panel1.Size = new Size(316, 25);
             panel1.TabIndex = 7;
+            // 
+            // clearButton
+            // 
+            clearButton.Location = new Point(168, 0);
+            clearButton.Name = "clearButton";
+            clearButton.Size = new Size(50, 25);
+            clearButton.TabIndex = 13;
+            clearButton.Text = "Clear";
+            clearButton.UseVisualStyleBackColor = true;
+            clearButton.Click += clearButton_Click;
             // 
             // groupBox1
             // 
@@ -167,7 +180,7 @@
             groupBox1.Controls.Add(moveButton);
             groupBox1.Controls.Add(panel3);
             groupBox1.Controls.Add(panel2);
-            groupBox1.Location = new Point(586, 42);
+            groupBox1.Location = new Point(30, 50);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(200, 197);
             groupBox1.TabIndex = 8;
@@ -261,15 +274,15 @@
             label1.TabIndex = 2;
             label1.Text = "X:";
             // 
-            // button2
+            // focusButton
             // 
-            button2.Location = new Point(31, 71);
-            button2.Name = "button2";
-            button2.Size = new Size(143, 23);
-            button2.TabIndex = 10;
-            button2.Text = "Focus Object";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            focusButton.Location = new Point(31, 71);
+            focusButton.Name = "focusButton";
+            focusButton.Size = new Size(143, 23);
+            focusButton.TabIndex = 10;
+            focusButton.Text = "Focus Object";
+            focusButton.UseVisualStyleBackColor = true;
+            focusButton.Click += button2_Click;
             // 
             // panel5
             // 
@@ -283,7 +296,7 @@
             // zoomInput
             // 
             zoomInput.Location = new Point(47, 3);
-            zoomInput.Minimum = new decimal(new int[] { 100, 0, 0, int.MinValue });
+            zoomInput.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             zoomInput.Name = "zoomInput";
             zoomInput.Size = new Size(92, 23);
             zoomInput.TabIndex = 0;
@@ -301,9 +314,9 @@
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(button2);
+            groupBox2.Controls.Add(focusButton);
             groupBox2.Controls.Add(panel5);
-            groupBox2.Location = new Point(586, 257);
+            groupBox2.Location = new Point(30, 265);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(200, 117);
             groupBox2.TabIndex = 9;
@@ -312,20 +325,32 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(showDerive);
             groupBox3.Controls.Add(panel8);
             groupBox3.Controls.Add(splittingButton);
             groupBox3.Controls.Add(panel7);
             groupBox3.Controls.Add(panel6);
             groupBox3.Controls.Add(increaseCtrlButton);
             groupBox3.Controls.Add(panel4);
-            groupBox3.Controls.Add(checkBox2);
-            groupBox3.Controls.Add(checkBox1);
-            groupBox3.Location = new Point(792, 42);
+            groupBox3.Controls.Add(controlPointsCheckBox);
+            groupBox3.Controls.Add(BezierCheckBox);
+            groupBox3.Location = new Point(30, 388);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(200, 332);
+            groupBox3.Size = new Size(200, 355);
             groupBox3.TabIndex = 12;
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
+            // 
+            // showDerive
+            // 
+            showDerive.AutoSize = true;
+            showDerive.Location = new Point(22, 150);
+            showDerive.Name = "showDerive";
+            showDerive.Size = new Size(112, 19);
+            showDerive.TabIndex = 11;
+            showDerive.Text = "Show Derivation";
+            showDerive.UseVisualStyleBackColor = true;
+            showDerive.CheckedChanged += showDerive_CheckedChanged;
             // 
             // panel8
             // 
@@ -402,7 +427,7 @@
             // 
             panel6.Controls.Add(weightInput);
             panel6.Controls.Add(label2);
-            panel6.Location = new Point(22, 180);
+            panel6.Location = new Point(22, 204);
             panel6.Name = "panel6";
             panel6.Size = new Size(143, 29);
             panel6.TabIndex = 9;
@@ -414,7 +439,7 @@
             weightInput.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
             weightInput.Location = new Point(24, 3);
             weightInput.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
-            weightInput.Minimum = new decimal(new int[] { 1, 0, 0, 131072 });
+            weightInput.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
             weightInput.Name = "weightInput";
             weightInput.Size = new Size(116, 23);
             weightInput.TabIndex = 12;
@@ -432,7 +457,7 @@
             // 
             // increaseCtrlButton
             // 
-            increaseCtrlButton.Location = new Point(22, 151);
+            increaseCtrlButton.Location = new Point(22, 175);
             increaseCtrlButton.Name = "increaseCtrlButton";
             increaseCtrlButton.Size = new Size(143, 23);
             increaseCtrlButton.TabIndex = 8;
@@ -444,7 +469,7 @@
             // 
             panel4.Controls.Add(tInput);
             panel4.Controls.Add(label5);
-            panel4.Location = new Point(22, 115);
+            panel4.Location = new Point(22, 90);
             panel4.Name = "panel4";
             panel4.Size = new Size(143, 29);
             panel4.TabIndex = 5;
@@ -471,50 +496,38 @@
             label5.TabIndex = 2;
             label5.Text = "t:";
             // 
-            // checkBox2
+            // controlPointsCheckBox
             // 
-            checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(22, 90);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(134, 19);
-            checkBox2.TabIndex = 2;
-            checkBox2.Text = "Show Control Points";
-            checkBox2.UseVisualStyleBackColor = true;
-            checkBox2.CheckedChanged += showControlPoints_CheckedChanged;
+            controlPointsCheckBox.AutoSize = true;
+            controlPointsCheckBox.Location = new Point(22, 125);
+            controlPointsCheckBox.Name = "controlPointsCheckBox";
+            controlPointsCheckBox.Size = new Size(134, 19);
+            controlPointsCheckBox.TabIndex = 2;
+            controlPointsCheckBox.Text = "Show Control Points";
+            controlPointsCheckBox.UseVisualStyleBackColor = true;
+            controlPointsCheckBox.CheckedChanged += showControlPoints_CheckedChanged;
             // 
-            // checkBox1
+            // BezierCheckBox
             // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(22, 65);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(123, 19);
-            checkBox1.TabIndex = 1;
-            checkBox1.Text = "Show Bezier Curve";
-            checkBox1.UseVisualStyleBackColor = true;
-            checkBox1.CheckedChanged += showBezier_CheckedChanged;
-            // 
-            // clearButton
-            // 
-            clearButton.Location = new Point(200, 19);
-            clearButton.Name = "clearButton";
-            clearButton.Size = new Size(50, 25);
-            clearButton.TabIndex = 13;
-            clearButton.Text = "Clear";
-            clearButton.UseVisualStyleBackColor = true;
-            clearButton.Click += clearButton_Click;
+            BezierCheckBox.AutoSize = true;
+            BezierCheckBox.Location = new Point(22, 65);
+            BezierCheckBox.Name = "BezierCheckBox";
+            BezierCheckBox.Size = new Size(123, 19);
+            BezierCheckBox.TabIndex = 1;
+            BezierCheckBox.Text = "Show Bezier Curve";
+            BezierCheckBox.UseVisualStyleBackColor = true;
+            BezierCheckBox.CheckedChanged += showBezier_CheckedChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1001, 450);
-            Controls.Add(clearButton);
+            ClientSize = new Size(1667, 755);
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Controls.Add(panel1);
             Controls.Add(pictureBox1);
-            Controls.Add(button1);
             Name = "Form1";
             Text = "CAGD";
             Paint += Form1_Paint;
@@ -547,7 +560,7 @@
         }
 
         #endregion
-        private Button button1;
+        private Button browseFilesButton;
         private PictureBox pictureBox1;
         private OpenFileDialog openFileDialog1;
         private RadioButton addButton;
@@ -562,7 +575,7 @@
         private NumericUpDown moveY;
         private Label label3;
         private Button moveButton;
-        private Button button2;
+        private Button focusButton;
         private Panel panel5;
         private NumericUpDown zoomInput;
         private Label label4;
@@ -570,8 +583,8 @@
         private Button splitButton;
         private NumericUpDown splitInput;
         private GroupBox groupBox3;
-        private CheckBox checkBox2;
-        private CheckBox checkBox1;
+        private CheckBox controlPointsCheckBox;
+        private CheckBox BezierCheckBox;
         private Panel panel4;
         private Label label5;
         private NumericUpDown tInput;
@@ -583,6 +596,7 @@
         private Label label2;
         private Button clearButton;
         private Panel panel7;
+        private CheckBox showDerive;
         private Button splittingButton;
         private Panel panel8;
         private TextBox splittingTextBox;
