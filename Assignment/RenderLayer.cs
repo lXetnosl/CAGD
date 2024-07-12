@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Assignment
         internal bool ShowControlPointsCheck = false;
         internal bool ShowBernsteinPolynoms = false;
         internal bool ShowDerivation = false;
+        internal int DerivationDegree = 1;
 
         private Bezier bezier;
         internal float T = 0.5f;
@@ -91,6 +93,24 @@ namespace Assignment
             AddFromFile(path);
         }
 
+        internal void DrawLine(Pen pen, Coordinate2D start, Coordinate2D end, Graphics graphics)
+        {
+            if (Math.Abs(start.X) < 1000000 && Math.Abs(start.Y) < 1000000 && Math.Abs(end.X) < 1000000 && Math.Abs(end.Y) < 1000000)
+            {
+                graphics.DrawLine(pen, start.X, start.Y, end.X, end.Y);
+            }
+        }
+
+        internal void DrawEllipse(Pen pen, Coordinate2D center, float radius, Graphics graphics)
+        {
+            // make radius smaller if zoom is too big
+            radius = radius / _globalZoom * 20;
+            if (Math.Abs(center.X) < 1000000 && Math.Abs(center.Y) < 1000000)
+            {
+                graphics.DrawEllipse(pen, center.X - radius, center.Y - radius, radius * 2, radius * 2);
+            }
+        }
+
         internal void AddVertex(Coordinate2D coord, bool isWorldSpace = true)
         {
             // Add a vertex to the list of vertices.
@@ -143,7 +163,11 @@ namespace Assignment
             // Delete all vertices.
             _vertices.Clear();
             _selectedVertices.Clear();
-            _splittedPoints.Clear();
+            // if _splittedPoints is not null, clear it.
+            if (_splittedPoints != null)
+            {
+                _splittedPoints.Clear();
+            }
         }
 
         internal void MoveSelected(Coordinate2D moveVector)
@@ -307,8 +331,8 @@ namespace Assignment
             Coordinate2D yAxisStart = boxCenterVector;
             Coordinate2D xAxisEnd = xAxisStart + new Coordinate2D(50, 0, 0);
             Coordinate2D yAxisEnd = yAxisStart + new Coordinate2D(0, 50, 0);
-            graphics.DrawLine(xAxisPen, xAxisStart.X, xAxisStart.Y, xAxisEnd.X, xAxisEnd.Y);
-            graphics.DrawLine(yAxisPen, yAxisStart.X, yAxisStart.Y, yAxisEnd.X, yAxisEnd.Y);
+            DrawLine(xAxisPen, xAxisStart, xAxisEnd, graphics);
+            DrawLine(yAxisPen, yAxisStart, yAxisEnd, graphics);
 
             if (_globalDisplacement == null)
             {
@@ -327,7 +351,7 @@ namespace Assignment
                 Pen vertexPen = _selectedVertices.Contains(vertex) ? selectedPen : unselectedPen;
                 Coordinate2D curPoint = new Coordinate2D(vertex.X * _globalZoom, vertex.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                 float transformedRadius = _vertexRadius * _globalZoom;
-                graphics.DrawEllipse(vertexPen, curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                DrawEllipse(vertexPen, curPoint, transformedRadius, graphics);
             }
 
             // Draw the edges.
@@ -340,7 +364,7 @@ namespace Assignment
             {
                 Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                 Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
-                graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
+                DrawLine(edgePen, start, end, graphics);
             }
 
             // Draw the Bezier curve with the selected method.
@@ -348,7 +372,7 @@ namespace Assignment
             if (ShowBezierCheck)
             {
                 List<Coordinate2D> curvePoints = new();
-                for (float t = -1; t <= 2; t += 0.01f)
+                for (float t = 0; t <= 1; t += 0.01f)
                 {
                     Coordinate2D curvePoint = bezier.GetCurvePoint(t);
                     curvePoints.Add(curvePoint + _globalDisplacement);
@@ -357,11 +381,7 @@ namespace Assignment
                 {
                     Coordinate2D start = new Coordinate2D(curvePoints[i].X * _globalZoom, curvePoints[i].Y * _globalZoom, 1);
                     Coordinate2D end = new Coordinate2D(curvePoints[i + 1].X * _globalZoom, curvePoints[i + 1].Y * _globalZoom, 1);
-                    // catch overflow error when drawing bezier curve
-                    if (Math.Abs(start.X) < 1000000 && Math.Abs(start.Y) < 1000000 && Math.Abs(end.X) < 1000000 && Math.Abs(end.Y) < 1000000)
-                    {
-                        graphics.DrawLine(edgePen, start.X, start.Y, end.X, end.Y);
-                    }
+                    DrawLine(edgePen, start, end, graphics);
                 }
             }
 
@@ -389,11 +409,11 @@ namespace Assignment
                         float transformedRadius = _vertexRadius * _globalZoom;
                         if (controlPoints.Count == 1)
                         {
-                            graphics.DrawEllipse(new Pen(Color.FromArgb(255, 0, 0), _penWidth+2), curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                            DrawEllipse(new Pen(Color.FromArgb(255, 0, 0), _penWidth+2), curPoint, transformedRadius, graphics);
                         }
                         else
                         {
-                            graphics.DrawEllipse(ctrlEdgePens[(iteration + 1) % 4], curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                            DrawEllipse(ctrlEdgePens[(iteration + 1) % 4], curPoint , transformedRadius, graphics);
                         }
                     }
                     iteration++;
@@ -407,7 +427,7 @@ namespace Assignment
                     {
                         Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
-                        graphics.DrawLine(ctrlEdgePens[iteration%4], start.X, start.Y, end.X, end.Y);
+                        DrawLine(ctrlEdgePens[iteration%4], start, end, graphics);
                     }
                 }
             }
@@ -431,7 +451,112 @@ namespace Assignment
                     {
                         Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
-                        graphics.DrawLine(ctrlEdgePens[i % 4], start.X, start.Y, end.X, end.Y);
+                        DrawLine(ctrlEdgePens[i % 4], start, end, graphics);
+                    }
+                }
+            }
+
+            // Draw the derivation of the bezier curve.
+            if (ShowDerivation)
+            {
+                // If there is no bezier curve, throw an exception.
+                if (bezier == null)
+                {
+                    throw new InvalidOperationException("No bezier curve");
+                }
+                // return if there are no control points
+                if (bezier.GetControlPoints(0).Count <= 1)
+                {
+                    return;
+                }
+
+                
+
+
+
+                // Choose Solution 1 or 2 for the derivation of the bezier curve.
+                bool chooseFirstSolution = false;
+
+                if (chooseFirstSolution)    // Solution 1 (complex)
+                {
+                    // for 0 to 1, step size 0.01, draw the derivation of the bezier curve
+                    List<Coordinate2D> derivationCurvePoints = new();
+                    for (float t = 0; t <= 1; t += 0.01f)
+                    {
+                        bezier.GetCurvePoint(t);
+                        Coordinate2D derivationPoint = bezier.GetDerivationCurvePoint(t);
+                        derivationCurvePoints.Add(derivationPoint + _globalDisplacement);
+                    }
+                    for (int i = 0; i < derivationCurvePoints.Count - 1; i++)
+                    {
+                        Coordinate2D start = new Coordinate2D(derivationCurvePoints[i].X * _globalZoom, derivationCurvePoints[i].Y * _globalZoom, 1);
+                        Coordinate2D end = new Coordinate2D(derivationCurvePoints[i + 1].X * _globalZoom, derivationCurvePoints[i + 1].Y * _globalZoom, 1);
+                        // catch overflow error when drawing bezier curve
+                        if (Math.Abs(start.X) < 1000000 && Math.Abs(start.Y) < 1000000 && Math.Abs(end.X) < 1000000 && Math.Abs(end.Y) < 1000000)
+                        {
+                            DrawLine(edgePen, start, end, graphics);
+                        }
+                    }
+                }
+                else    // Solution 2 (simple)
+                {
+                    // if derivation degree is 0, return
+                    if (DerivationDegree == 0)
+                    {
+                        return;
+                    }
+                    // if derivation degree is greater than the degree of the bezier curve, return
+                    if (DerivationDegree > _vertices.Count - 1)
+                    {
+                        return;
+                    }
+
+
+                    List<Coordinate2D> derivationControlPoints = bezier.GetDerivationControlPoints();
+                    List<Edge2D> controlEdges = new();
+
+                    Bezier DerivedBezier = useDeCasteljau ? new Bezier_DeCasteljau(derivationControlPoints) : new Bezier_Bernstein(derivationControlPoints);
+                    for (int i= 0; i < DerivationDegree-1; i++)
+                    {
+                        derivationControlPoints = DerivedBezier.GetDerivationControlPoints();
+                        DerivedBezier = useDeCasteljau ? new Bezier_DeCasteljau(derivationControlPoints) : new Bezier_Bernstein(derivationControlPoints);
+                    }
+
+                    // draw control points of the derivation
+                    foreach (Coordinate2D derivationControlPoint in derivationControlPoints)
+                    {
+                        Coordinate2D curPoint = new Coordinate2D(derivationControlPoint.X * _globalZoom, derivationControlPoint.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        float transformedRadius = _vertexRadius * _globalZoom;
+                        DrawEllipse(new Pen(Color.FromArgb(255, 0, 0), _penWidth), curPoint, transformedRadius, graphics);
+                    }
+                    // draw edges between control points
+                    for (int j = 0; j < derivationControlPoints.Count - 1; j++)
+                    {
+                        controlEdges.Add(new Edge2D(derivationControlPoints[j], derivationControlPoints[j + 1]));
+                    }
+                    foreach (Edge2D edge in controlEdges)
+                    {
+                        Coordinate2D start = new Coordinate2D(edge.Start.X * _globalZoom, edge.Start.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        Coordinate2D end = new Coordinate2D(edge.End.X * _globalZoom, edge.End.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
+                        DrawLine(edgePen, start, end, graphics);
+                    }
+
+                    // draw the derivation of the bezier curve
+                    List<Coordinate2D> curvePoints = new();
+                    for (float t = 0; t <= 1; t += 0.01f)
+                    {
+                        Coordinate2D curvePoint = DerivedBezier.GetCurvePoint(t);
+                        curvePoints.Add(curvePoint + _globalDisplacement);
+                    }
+                    for (int i = 0; i < curvePoints.Count - 1; i++)
+                    {
+                        Coordinate2D start = new Coordinate2D(curvePoints[i].X * _globalZoom, curvePoints[i].Y * _globalZoom, 1);
+                        Coordinate2D end = new Coordinate2D(curvePoints[i + 1].X * _globalZoom, curvePoints[i + 1].Y * _globalZoom, 1);
+                        // catch overflow error when drawing bezier curve
+                        if (Math.Abs(start.X) < 1000000 && Math.Abs(start.Y) < 1000000 && Math.Abs(end.X) < 1000000 && Math.Abs(end.Y) < 1000000)
+                        {
+                            DrawLine(edgePen, start, end, graphics);
+                        }
                     }
                 }
             }
@@ -445,7 +570,7 @@ namespace Assignment
                     {
                         Coordinate2D curPoint = new Coordinate2D(controlPoint.X * _globalZoom, controlPoint.Y * _globalZoom, 1) + (_globalDisplacement * _globalZoom);
                         float transformedRadius = _vertexRadius * _globalZoom;
-                        graphics.DrawEllipse(ctrlEdgePens[i], curPoint.X - transformedRadius, curPoint.Y - transformedRadius, transformedRadius * 2, transformedRadius * 2);
+                        DrawEllipse(ctrlEdgePens[i], curPoint, transformedRadius, graphics);
                     }
                 }
             }
@@ -453,11 +578,28 @@ namespace Assignment
 
         internal void increaseControlPoints()
         {
+            // Increase the number of control points by 1.
+            // If there are less than 2 control points, return.
+            if (_vertices.Count <= 1)
+            {
+                return;
+            }
+            // If there is no next iteration, throw an exception.
+            if (bezier == null)
+            {
+                throw new InvalidOperationException("No next iteration");
+            }
             _vertices = bezier.IncreaseControlPoints();
         }
 
         internal void SplitCurve(List<float> ts)
         {
+            // Split the bezier curve at the specified t values.
+            // If there is no bezier curve, throw an exception.
+            if (bezier == null)
+            {
+                throw new InvalidOperationException("No bezier curve");
+            }
             _splittedPoints = bezier.SplitCurve(ts);
         }
     }

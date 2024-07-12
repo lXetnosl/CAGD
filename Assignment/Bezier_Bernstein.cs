@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Assignment
 {
@@ -146,6 +147,38 @@ namespace Assignment
                 Coordinate2D calcedCoord;
             }
             return formatOutput(output);
+        }
+
+        public List<Coordinate2D> GetDerivationControlPoints()
+        {
+            // throw exception if controlpoints is empty
+            if (this._controlPoints.Count == 0)
+            {
+                throw new InvalidOperationException("No control points");
+            }
+            // for ever controlpoint, calculate the derivation point
+            List<Coordinate2D> derivationPoints = new();
+            for (int i = 0; i < _controlPoints.Count - 1; i++)
+            {
+                Coordinate2D derivationPoint = new Coordinate2D((_controlPoints[i + 1].X - _controlPoints[i].X), (_controlPoints[i + 1].Y - _controlPoints[i].Y), 1);
+                derivationPoints.Add(derivationPoint);
+            }
+            return derivationPoints;
+        }
+
+        public Coordinate2D GetDerivationCurvePoint(float t)
+        {
+            // check if t is between -1 and 2
+            if (t < -1 || t > 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(t));
+            }
+            // throw exception if controlpoints are less than 2
+            if (this._controlPoints.Count < 2)
+            {
+                throw new InvalidOperationException("Not enough control points");
+            }
+            throw new NotImplementedException();
         }
 
         private List<Coordinate2D> formatOutput(List<Coordinate2D> input)

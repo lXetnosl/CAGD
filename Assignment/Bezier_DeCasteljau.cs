@@ -106,7 +106,48 @@ namespace Assignment
             return this.nextBezierIteration.GetControlPoints(iteration - 1);
         }
 
+        public List<Coordinate2D> GetDerivationControlPoints()
+        {
+            // throw exception if controlpoints is empty
+            if (this.controlpoints.Count == 0)
+            {
+                throw new InvalidOperationException("No control points");
+            }
+            // for ever controlpoint, calculate the derivation point
+            List<Coordinate2D> derivationPoints = new();
+            for (int i = 0; i < controlpoints.Count - 1; i++)
+            {
+                Coordinate2D derivationPoint = new Coordinate2D((controlpoints[i + 1].X - controlpoints[i].X), (controlpoints[i + 1].Y - controlpoints[i].Y), 1);
+                derivationPoints.Add(derivationPoint);
+            }
+            return derivationPoints;
+        }
 
+        public Coordinate2D GetDerivationCurvePoint(float t)
+        {
+            // check if t is between -1 and 2
+            if (t < -1 || t > 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(t));
+            }
+            // throw exception if controlpoints are less than 2
+            if (this.controlpoints.Count < 2)
+            {
+                throw new InvalidOperationException("Not enough control points");
+            }
+            // if there are 2 control points left, return the derivation point
+            if (this.controlpoints.Count == 2)
+            {
+                return new Coordinate2D((this.controlpoints[1].X - this.controlpoints[0].X), (this.controlpoints[1].Y - this.controlpoints[0].Y), 1, 1);
+            }
+
+            // if there is no next iteration, throw an exception
+            if (this.nextBezierIteration == null)
+            {
+                throw new InvalidOperationException("No next iteration");
+            }
+            return this.nextBezierIteration.GetDerivationCurvePoint(t);
+        }
 
         public override string ToString()
         {

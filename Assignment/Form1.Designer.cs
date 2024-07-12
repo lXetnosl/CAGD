@@ -52,6 +52,7 @@
             label4 = new Label();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            deriveDegreeInput = new NumericUpDown();
             showDerive = new CheckBox();
             panel8 = new Panel();
             splittingTextBox = new TextBox();
@@ -81,6 +82,7 @@
             ((System.ComponentModel.ISupportInitialize)zoomInput).BeginInit();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)deriveDegreeInput).BeginInit();
             panel8.SuspendLayout();
             panel7.SuspendLayout();
             panel6.SuspendLayout();
@@ -325,6 +327,7 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(deriveDegreeInput);
             groupBox3.Controls.Add(showDerive);
             groupBox3.Controls.Add(panel8);
             groupBox3.Controls.Add(splittingButton);
@@ -340,6 +343,16 @@
             groupBox3.TabIndex = 12;
             groupBox3.TabStop = false;
             groupBox3.Text = "Bezier";
+            // 
+            // deriveDegreeInput
+            // 
+            deriveDegreeInput.Location = new Point(131, 150);
+            deriveDegreeInput.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            deriveDegreeInput.Name = "deriveDegreeInput";
+            deriveDegreeInput.Size = new Size(51, 23);
+            deriveDegreeInput.TabIndex = 13;
+            deriveDegreeInput.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            deriveDegreeInput.ValueChanged += deriveDegreeInput_ValueChanged;
             // 
             // showDerive
             // 
@@ -547,6 +560,7 @@
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)deriveDegreeInput).EndInit();
             panel8.ResumeLayout(false);
             panel8.PerformLayout();
             panel7.ResumeLayout(false);
@@ -601,5 +615,6 @@
         private Panel panel8;
         private TextBox splittingTextBox;
         private Label label6;
+        private NumericUpDown deriveDegreeInput;
     }
 }

@@ -26,7 +26,7 @@ namespace Assignment
 
         public float W
         {
-            get 
+            get
             {
                 if (!Type.Equals("Point"))
                 {
@@ -34,7 +34,7 @@ namespace Assignment
                 }
                 return w; 
             }
-            set 
+            set
             {
                 if (value <= 0)
                 {
@@ -49,7 +49,7 @@ namespace Assignment
         {
             get 
             {
-                switch (epsilon) 
+                switch (epsilon)
                 {
                     case 0:
                         return "Vector";

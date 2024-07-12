@@ -265,5 +265,12 @@ namespace Assignment
             renderLayer.SplitCurve(ts);
             renderLayer.Render();
         }
+
+        private void deriveDegreeInput_ValueChanged(object sender, EventArgs e)
+        {
+            // set degree for derivation
+            renderLayer.DerivationDegree = Convert.ToInt32(deriveDegreeInput.Value);
+            renderLayer.Render();
+        }
     }
 }

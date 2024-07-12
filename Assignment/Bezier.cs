@@ -17,5 +17,8 @@ namespace Assignment
         public List<Coordinate2D> IncreaseControlPoints();
 
         public List<List<Coordinate2D>> SplitCurve(List<float> t);
+
+        public List<Coordinate2D> GetDerivationControlPoints();
+        public Coordinate2D GetDerivationCurvePoint(float t);
     }
 }
